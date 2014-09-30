@@ -11,6 +11,9 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -37,6 +40,7 @@ public class UploadAction extends ActionSupport {
 	   Random rand = new Random();
 	   int  n = (rand.nextInt(9) + 1) * 10000 + rand.nextInt(9999);
 	   this.setCarNumber("京A " + Integer.toString(n));
+	   System.out.println(file);
 	   try {
 		   image=ImageIO.read(file);
 		    if (image == null) {
@@ -48,6 +52,7 @@ public class UploadAction extends ActionSupport {
 		    return ERROR;
 		}
 	      System.out.println(contentType);
+	      Process process = new Process();
 	   return SUCCESS;
    }
 

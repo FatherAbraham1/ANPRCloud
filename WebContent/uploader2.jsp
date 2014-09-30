@@ -28,7 +28,7 @@
 <body>
 	<div class="sticky">
 	  <!-- body content here -->
-	<nav class="top-bar" data-topbar role="navigation" >
+	<nav class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">
 	  <ul class="title-area">
 	    <li class="name">
 	      <h1><a href="#">My Site</a></h1>
@@ -69,12 +69,17 @@
 	</div>
 	<!-- Here is the dropzone.js form -->
 	<form action="/ANPRCloud/doUpload.action" id="uploader" class="dropzone" method="post" enctype="multipart/form-data">
-	<div class="bigplus" ></div>
 	</form>
 	<script src="js/vendor/jquery.js"></script>
 	<script src="js/vendor/fastclick.js"></script>
 	<script src="js/foundation.min.js"></script>
 	<script src="script/dropzone.js"></script>
 	<script src="script/uploader.js"></script>
+  <script>
+    $(document).foundation();
+
+
+    //foundation({alert: {speed: 3000}});
+  </script>
 </body>
 </html>
