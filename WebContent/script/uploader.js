@@ -10,6 +10,7 @@ Dropzone.options.uploader = {
   acceptedFiles: "image/*",
   thumbnailWidth: 350,
   thumbnailHeight: 350,
+  clickable: "form .bigplus, form",
   previewTemplate:  "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n   <div class=\"dz-size\" data-dz-size></div>\n  <div class=\"dz-placeholder\" ></div>\n <div class=\"dz-response\" ><strong><br/></strong></div>\n  <img data-dz-thumbnail />\n <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  </div>\n    <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
   resize: function(file) {
         var info, srcRatio, trgRatio;

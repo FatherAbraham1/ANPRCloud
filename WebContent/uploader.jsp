@@ -39,38 +39,57 @@
 	
 	  <section class="top-bar-section">
 	    <!-- Right Nav Section -->
+	    
 	    <ul class="right">
-	      <li class="active"><a href="#">Right Button Active</a></li>
 	      <li class="has-dropdown">
-	        <a href="#">Right Button Dropdown</a>
+	        <a href="#">Edit</a>
 	        <ul class="dropdown">
-	          <li><a href="#">First link in dropdown</a></li>
-	          <li class="active"><a href="#">Active link in dropdown</a></li>
+	          <li><a href="http://www.google.com">Delete all</a></li>
 	        </ul>
 	      </li>
-	      <li class="has-form">
-			  <div class="row collapse">
-			    <div class="large-8 small-9 columns">
-			      <input type="text" placeholder="Find Stuff">
-			    </div>
-			    <div class="large-4 small-3 columns">
-			      <a href="#" class="alert button expand">Search</a>
-			    </div>
-			  </div>
-			</li>
+	      <li class="has-dropdown">
+	        <a href="#">Account</a>
+	        <ul class="dropdown">
+	          <li><a href="http://www.google.com">Login in</a></li>
+	          <li><a href="#">Sign up</a></li>
+	          <li><a href="#">Login out</a></li>
+	        </ul>
+	      </li>
 	    </ul>
 	
 	    <!-- Left Nav Section -->
 	    <ul class="left">
-	      <li><a href="#">Left Nav Button</a></li>
+	   	<li class="has-form">
+		<div class="row collapse">
+		  <div class="large-8 small-9 columns">
+		      <input type="text" placeholder="Find Stuff">
+		    </div>
+		    <div class="large-4 small-3 columns">
+		      <a href="#" class="alert button expand">Search</a>
+		    </div>
+		  </div>
+		</li>
+		<li class="has-form">
+		  <a href="http://foundation.zurb.com/docs" class="button">Delete</a>
+		</li>
 	    </ul>
 	  </section>
 	</nav>
 	</div>
 	<!-- Here is the dropzone.js form -->
 	<form action="/ANPRCloud/doUpload.action" id="uploader" class="dropzone" method="post" enctype="multipart/form-data">
-	<div class="bigplus" ></div>
+	<div class="bigplus"></div>
+
 	</form>
+	<div class="footer">
+		<a href="about.html" data-search="">About</a>
+		<a href="blog.html" data-search="">Blog</a>
+		<a href="APP.html" data-search="">APP</a>
+		<a href="developers.html" data-search="">Developers</a>
+		<a href="contact.html" data-search="">Contact</a>
+		<img src="images/1oo8.svg" />
+	</div>
+
 	<script src="js/vendor/jquery.js"></script>
 	<script src="js/vendor/fastclick.js"></script>
 	<script src="js/foundation.min.js"></script>
