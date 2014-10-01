@@ -52,7 +52,7 @@ public class UploadAction extends ActionSupport {
 		    return ERROR;
 		}
 	      System.out.println(contentType);
-	      Process process = new Process();
+	      Process process = new Process(file.getAbsolutePath());
 	   return SUCCESS;
    }
 
