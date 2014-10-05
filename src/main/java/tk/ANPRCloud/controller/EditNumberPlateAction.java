@@ -6,11 +6,23 @@ import org.apache.log4j.Logger;
 
 import tk.ANPRCloud.entity.NumberPlateEntity;
 import tk.ANPRCloud.service.NumberPlateManager;
+
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 public class EditNumberPlateAction extends ActionSupport implements Preparable	
 {
+	private File file;
+	private String contentType;
+	private String filename;
+	private BufferedImage image;
+	
 	private static final long serialVersionUID = 1L;
 	
 	//Logger configured using log4j
@@ -23,6 +35,18 @@ public class EditNumberPlateAction extends ActionSupport implements Preparable
 	//NumberPlate manager injected by spring context; This is cool !!
 	private NumberPlateManager numberPlateManager;
 
+	public void setUpload(File file) {
+		this.file = file;
+	}
+
+	public void setUploadContentType(String contentType) {
+	    this.contentType = contentType;
+	}
+
+	public void setUploadFileName(String filename) {
+		this.filename = filename;
+	}
+	
 	//This method return list of numberPlates in database
 	public String listNumberPlates() {
 		logger.info("listNumberPlates method called");
@@ -34,6 +58,16 @@ public class EditNumberPlateAction extends ActionSupport implements Preparable
 	public String addNumberPlate() {
 		logger.info("addNumberPlate method called");
 		//numberPlateManager.addNumberPlate(numberPlate);
+		try {
+			image=ImageIO.read(file);
+		    if (image == null) {
+		        System.out.println("The file "+filename+" could not be opened , it is not an image");
+		        return ERROR;
+		    }
+		} catch(IOException ex) {
+		    System.out.println("The file "+filename+" could not be opened , an error occurred.");
+		    return ERROR;
+		}
 		return SUCCESS;
 	}
 
