@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import tk.ANPRCloud.entity.NumberPlateEntity;
+import tk.ANPRCloud.entity.NumberPlateFile;
 import tk.ANPRCloud.service.NumberPlateManager;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -18,10 +19,7 @@ import javax.imageio.ImageIO;
 
 public class EditNumberPlateAction extends ActionSupport implements Preparable	
 {
-	private File file;
-	private String contentType;
-	private String filename;
-	private BufferedImage image;
+	private NumberPlateFile numberPlateFile = new NumberPlateFile();
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -36,15 +34,15 @@ public class EditNumberPlateAction extends ActionSupport implements Preparable
 	private NumberPlateManager numberPlateManager;
 
 	public void setUpload(File file) {
-		this.file = file;
+		this.numberPlateFile.setFile(file);
 	}
 
 	public void setUploadContentType(String contentType) {
-	    this.contentType = contentType;
+	    this.numberPlateFile.setContentType(contentType);
 	}
 
 	public void setUploadFileName(String filename) {
-		this.filename = filename;
+		this.numberPlateFile.setFilename(filename);
 	}
 	
 	//This method return list of numberPlates in database
@@ -57,18 +55,11 @@ public class EditNumberPlateAction extends ActionSupport implements Preparable
 	//This method will be called when a numberPlate object is added
 	public String addNumberPlate() {
 		logger.info("addNumberPlate method called");
-		//numberPlateManager.addNumberPlate(numberPlate);
-		try {
-			image=ImageIO.read(file);
-		    if (image == null) {
-		        System.out.println("The file "+filename+" could not be opened , it is not an image");
-		        return ERROR;
-		    }
-		} catch(IOException ex) {
-		    System.out.println("The file "+filename+" could not be opened , an error occurred.");
-		    return ERROR;
-		}
-		return SUCCESS;
+		if (numberPlateFile.isImageFile()){
+			return SUCCESS;
+		}else{
+			return ERROR;
+		}	
 	}
 
 	//Deletes a numberPlate by it's id passed in path parameter
