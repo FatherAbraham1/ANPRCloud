@@ -14,7 +14,6 @@ public class NumberPlateFile {
 	
 	// Getter and setter
 	public File getFile() {
-		System.out.println(file);
 		return file;
 	}
 	public void setFile(File file) {

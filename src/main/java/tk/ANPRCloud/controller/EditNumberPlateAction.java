@@ -56,10 +56,11 @@ public class EditNumberPlateAction extends ActionSupport implements Preparable
 	public String addNumberPlate() {
 		logger.info("addNumberPlate method called");
 		if (numberPlateFile.isImageFile()){
+			numberPlateManager.addNumberPlate(numberPlateFile);
 			return SUCCESS;
 		}else{
 			return ERROR;
-		}	
+		}
 	}
 
 	//Deletes a numberPlate by it's id passed in path parameter
