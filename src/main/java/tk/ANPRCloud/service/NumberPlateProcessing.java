@@ -7,7 +7,9 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
+import tk.ANPRCloud.service.fliters.Binarization;
 import tk.ANPRCloud.service.fliters.Grayscale;
+import tk.ANPRCloud.service.fliters.Sobel;
 
 public class NumberPlateProcessing{
 	private static List<NumberPlateFilter> FiltersChain = new ArrayList<NumberPlateFilter>();
@@ -20,6 +22,9 @@ public class NumberPlateProcessing{
 		
 		//Append the filter chain
 		FiltersChain.add((NumberPlateFilter)(new Grayscale(0)));
+		FiltersChain.add((NumberPlateFilter)(new Sobel(0)));
+		//FiltersChain.add((NumberPlateFilter)(new Grayscale(0)));
+		FiltersChain.add((NumberPlateFilter)(new Binarization(127)));
 	}
 	
 	public String doProc(String FilePath) {	
