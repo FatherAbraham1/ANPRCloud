@@ -9,8 +9,10 @@ import tk.ANPRCloud.service.NumberPlateFilter;
 public class Binarization implements NumberPlateFilter {
 	private int threshod = 127;
 	private Mat result;
-	public Binarization(int thresthod){
-		this.threshod = thresthod;
+	public Binarization(String thresthod){
+		if (thresthod != "default")  {
+			this.threshod = Integer.parseInt(thresthod);
+		}
 	}
 
 	@Override
@@ -19,6 +21,11 @@ public class Binarization implements NumberPlateFilter {
 		result = new Mat();
 	    Imgproc.threshold(src, result, threshod, 255, Imgproc.THRESH_BINARY);
 	    Highgui.imwrite("/tmp/bin.png", result);
+		return result;
+	}
+
+	@Override
+	public Mat getResult() {
 		return result;
 	}
 

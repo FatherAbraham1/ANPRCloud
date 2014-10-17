@@ -32,7 +32,27 @@
     <bean id="numberPlateManager" class="tk.ANPRCloud.service.NumberPlateManagerImpl">
         <property name="numberPlateDAO" ref="numberPlateDAO"/>
     </bean>
+
+	<bean id="userManagerAction" class="tk.ANPRCloud.controller.UserManagerAction" >  
+		<property name="userManager">
+	    	<ref bean="userManager"/>
+	    </property>
+    </bean>
     
+    <bean id="loginInterceptor" class="tk.ANPRCloud.controller.LoginInterceptor">  
+        <property name="userManager">
+	    	<ref bean="userManager"/>
+	    </property>
+    </bean>  
+    
+    <bean id="userManager" class="tk.ANPRCloud.service.UserManagerImpl">
+     	<property name="userDAO" ref="userDAO" />
+    </bean>  
+    
+    <bean id="userDAO" class="tk.ANPRCloud.dao.UserDAOImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+	</bean>    
+	
     <!-- Configure jdbc.properties -->
     <bean id="propertyConfigurer"
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
@@ -59,6 +79,9 @@
             <props>
                 <prop key="hibernate.dialect">${jdbc.dialect}</prop>
                 <prop key="hibernate.show_sql">true</prop>
+<!--                 <prop key="hibernate.connection.CharSet">utf8</prop>
+		        <prop key="hibernate.connection.characterEncoding">utf8</prop>
+		        <prop key="hibernate.connection.useUnicode">true</prop> -->
             </props>
         </property>
     </bean>

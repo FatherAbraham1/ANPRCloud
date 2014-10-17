@@ -9,7 +9,7 @@
     <!-- Global message resource; 
     	 Otherwise you will have seperate message resource for each Action 
     -->
-    <constant name="struts.custom.i18n.resources" value="messages" /> 
+    <!-- <constant name="struts.custom.i18n.resources" value="messages" />  -->
     <!-- 
     	This is important if you are planning to have slashes in Action URLs
     	e.g. In this demo, numberPlate is deleted using URL /delete/10
@@ -20,6 +20,32 @@
      
     <!-- Normal Action mappings are defined here -->
 	<package name="default" namespace="" extends="struts-default">
+		<interceptors>
+			<interceptor name="loginInterceptor" class="loginInterceptor"></interceptor>
+			<interceptor-stack name="loginDefaultStack">
+				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="loginDefaultStack"></default-interceptor-ref>
+		<global-results>
+			<result name="login">/view/login.jsp</result>
+		</global-results>		 
+		<action name="login" class="userManagerAction" method="login">
+			<result type="redirect">${goingToURL}</result>
+			<result name="input">/view/login.jsp</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		<action name="logout" class="userManagerAction" method="logout"></action>
+		
+		
+		<action name="register" class="userManagerAction" method="register">
+			<result type="redirect">/login</result>
+			<result name="input">/view/register.jsp</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		
 	    <!-- Two things to Notice: 
 	    	 1) class is set to 'editNumberPlateAction' which is bean defined by Spring context
 	    	 2) We have given the method to be called here as well;
@@ -36,8 +62,12 @@
 			<result type="redirect">/list</result>
 		</action>
 		<action name="*" class="editNumberPlateAction" method="listNumberPlates">
-		  <result>/view/editNumberPlateList.jsp</result>
-		</action> 
+			<result>/view/index.html</result>
+		</action>
+		<action name="detail/*" class="editNumberPlateAction" method="detailOfNumberPlate">
+			<param name="numberPlate.id">{1}</param>
+			<result name="success">/view/detailOfNumberPlate.jsp</result>
+		</action>
 	</package>
 	
 </struts>

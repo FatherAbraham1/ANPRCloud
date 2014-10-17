@@ -1,5 +1,7 @@
 package tk.ANPRCloud.entity;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,54 +9,74 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="EMPLOYEE")
+@Table(name="NUMBERPLATES")
 public class NumberPlateEntity {
      
     @Id
     @Column(name="ID")
     @GeneratedValue
     private Integer id;
-     
-    @Column(name="FIRSTNAME")
-    private String firstname;
+    
+	@Column(name="IMAGE")
+    private String image;
  
-    @Column(name="LASTNAME")
-    private String lastname;
+    @Column(name="FILENAME")
+    private String FileName;
  
-    @Column(name="EMAIL")
-    private String email;
-     
-    @Column(name="TELEPHONE")
-    private String telephone;
-         
-    public String getEmail() {
-        return email;
-    }
-    public String getTelephone() {
-        return telephone;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-    public String getFirstname() {
-        return firstname;
-    }
-    public String getLastname() {
-        return lastname;
-    }
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-    public Integer getId() {
+    @Column(name="CONTENTTYPE")
+    private String ContenType;
+
+	@Column(name="OWNER")
+    private String Owner;
+	
+	@Column(name="NUMBER")
+	private String number;
+	
+	@Column(name="DETAILS")
+	private String Details;
+	
+	public String getNumber() {
+		return number;
+	}
+	public void setNumber(String number) {
+		this.number = number;
+	}
+    
+    public String getDetails() {
+		return Details;
+	}
+	public void setDetails(String details) {
+		Details = details;
+	}
+	public String getOwner() {
+		return Owner;
+	}
+	public void setOwner(String owner) {
+		Owner = owner;
+	}
+	public Integer getId() {
         return id;
     }
     public void setId(Integer id) {
         this.id = id;
     }
+    public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	public String getFileName() {
+		return FileName;
+	}
+	public void setFileName(String fileName) {
+		FileName = fileName;
+	}
+	public String getContenType() {
+		return ContenType;
+	}
+	public void setContenType(String contenType) {
+		ContenType = contenType;
+	}
+
 }

@@ -10,8 +10,10 @@ public class Grayscale implements NumberPlateFilter {
 	private int mode;
 	private Mat result;
 	
-	public Grayscale(int mode){
-		this.mode = mode;
+	public Grayscale(String mode){
+		if (mode != "default")  {
+			this.mode = Integer.parseInt(mode);
+		}
 	}
 	
 	public Mat proc(Mat src) {
@@ -19,6 +21,10 @@ public class Grayscale implements NumberPlateFilter {
 		result = new Mat();
 	    Imgproc.cvtColor(src, result, Imgproc.COLOR_RGB2GRAY );
 	    Highgui.imwrite("/tmp/gray.png", result);
+		return result;
+	}
+	@Override
+	public Mat getResult() {
 		return result;
 	}
 }

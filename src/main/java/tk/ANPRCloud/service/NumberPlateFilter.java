@@ -4,4 +4,5 @@ import org.opencv.core.Mat;
 
 public interface NumberPlateFilter {
 	public Mat proc (Mat src);
+	public Mat getResult();
 }

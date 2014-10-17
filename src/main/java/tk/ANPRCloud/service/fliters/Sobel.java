@@ -17,8 +17,10 @@ public class Sobel implements NumberPlateFilter {
 	private static int delta = 0;
 	private static int ddepth = CvType.CV_16S;
 	
-	public Sobel(int mode){
-		this.mode = mode;
+	public Sobel(String mode){
+		if (mode != "default")  {
+			this.mode = Integer.parseInt(mode);
+		}
 	}
 	
 	@Override
@@ -32,5 +34,10 @@ public class Sobel implements NumberPlateFilter {
 	    Core.addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, result );
 	    Highgui.imwrite("/tmp/sobel.png", result);
 	    return result;
+	}
+	
+	@Override
+	public Mat getResult() {
+		return result;
 	}
 }

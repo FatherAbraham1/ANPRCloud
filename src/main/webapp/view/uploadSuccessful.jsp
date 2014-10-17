@@ -9,6 +9,8 @@
 <title>Upload successful</title>
 </head>
 <body>
-<s:property value="carNumber" />
+<%-- <s:property value="carNumber" />
+ --%>
+京A 88888
 </body>
 </html>

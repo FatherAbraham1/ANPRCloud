@@ -1,12 +1,18 @@
 package tk.ANPRCloud.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.interceptor.SessionAware;
+import org.hibernate.ObjectNotFoundException;
 
 import tk.ANPRCloud.entity.NumberPlateEntity;
 import tk.ANPRCloud.entity.NumberPlateFile;
+import tk.ANPRCloud.exceptions.InvalidFrontEndAccessException;
 import tk.ANPRCloud.service.NumberPlateManager;
+import tk.ANPRCloud.controller.LoginInterceptor;
+import tk.ANPRCloud.service.UserDetails;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
@@ -17,7 +23,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class EditNumberPlateAction extends ActionSupport implements Preparable	
+public class EditNumberPlateAction extends ActionSupport implements Preparable, SessionAware
 {
 	private NumberPlateFile numberPlateFile = new NumberPlateFile();
 	
@@ -32,6 +38,8 @@ public class EditNumberPlateAction extends ActionSupport implements Preparable
 	
 	//NumberPlate manager injected by spring context; This is cool !!
 	private NumberPlateManager numberPlateManager;
+
+	private Map session;
 
 	public void setUpload(File file) {
 		this.numberPlateFile.setFile(file);
@@ -48,25 +56,32 @@ public class EditNumberPlateAction extends ActionSupport implements Preparable
 	//This method return list of numberPlates in database
 	public String listNumberPlates() {
 		logger.info("listNumberPlates method called");
-		numberPlates = numberPlateManager.getAllNumberPlates();
+		numberPlates = numberPlateManager.getAllNumberPlates(getUsernameFromCurrentSession());
 		return SUCCESS;
 	}
 
 	//This method will be called when a numberPlate object is added
 	public String addNumberPlate() {
 		logger.info("addNumberPlate method called");
-		if (numberPlateFile.isImageFile()){
-			numberPlateManager.addNumberPlate(numberPlateFile);
+		if (numberPlateFile.storeImageFile()){
+			numberPlateManager.addNumberPlate(getUsernameFromCurrentSession(), numberPlateFile);
 			return SUCCESS;
-		}else{
+		} else {
 			return ERROR;
 		}
-	}
+	}	
 
 	//Deletes a numberPlate by it's id passed in path parameter
-	public String deleteNumberPlate() {
+	public String deleteNumberPlate() throws InvalidFrontEndAccessException {
 		logger.info("deleteNumberPlate method called");
-		numberPlateManager.deleteNumberPlate(numberPlate.getId());
+		numberPlateManager.deleteNumberPlate(getUsernameFromCurrentSession(), numberPlate.getId());
+		return SUCCESS;
+	}
+	
+	//Get details of a numberPlate by it's id passed in path parameter
+	public String getDetailsOfNumberPlates() throws InvalidFrontEndAccessException {
+		logger.info("deleteNumberPlate method called");
+		numberPlateManager.getDetailsOfNumberPlate(getUsernameFromCurrentSession(), numberPlate.getId());
 		return SUCCESS;
 	}
 	
@@ -95,5 +110,14 @@ public class EditNumberPlateAction extends ActionSupport implements Preparable
 
 	public void setNumberPlate(NumberPlateEntity numberPlate) {
 		this.numberPlate = numberPlate;
+	}
+
+	@Override
+	public void setSession(Map session) {
+		this.session = session;
+	}
+	
+	private String getUsernameFromCurrentSession(){
+		return ((UserDetails)this.session.get(LoginInterceptor.USER_SESSION_KEY)).getUsername();
 	}
 }
