@@ -10,10 +10,10 @@ public interface NumberPlateDAO
 	//This method will be called when a numberPlate object is added
     public void addNumberPlate(NumberPlateEntity numberPlate);
     //This method return list of numberPlates in database
-    public List<NumberPlateEntity> getAllNumberPlates(String username) throws InvalidDataAccessException;
+    public List<Integer> getAllNumberPlates(String username) throws InvalidDataAccessException;
     //Deletes a numberPlate by it's id
     public void deleteNumberPlate(Integer numberPlateId);
     //Authorize the id match the corresponding username
-	public boolean authorizeUsernameAndId(String username, Integer numberPlateId);
-	public String getDetailsOfNumberPlates(Integer numberPlateId);
+	public boolean authorizeUsernameAndId(String username, Integer numberPlateId) throws InvalidDataAccessException;
+	public NumberPlateEntity queryNumberPlate(Integer numberPlateId) throws InvalidDataAccessException;
 }

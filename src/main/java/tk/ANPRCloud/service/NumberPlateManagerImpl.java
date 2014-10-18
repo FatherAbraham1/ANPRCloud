@@ -45,9 +45,9 @@ public class NumberPlateManagerImpl implements NumberPlateManager {
 	//This method return list of numberPlates in database
 	@Override
 	@Transactional
-	public List<NumberPlateEntity> getAllNumberPlates(String username) {
+	public List<Integer> getAllNumberPlates(String username) {
 		try {
-			return Base64Decode(numberPlateDAO.getAllNumberPlates(username));
+			return numberPlateDAO.getAllNumberPlates(username);
 		} catch (InvalidDataAccessException e){
 			logger.info("No any number plate or data access error!");
 			return null;
@@ -58,36 +58,37 @@ public class NumberPlateManagerImpl implements NumberPlateManager {
 	@Override
 	@Transactional
 	public void deleteNumberPlate(String username, Integer numberPlateId) throws InvalidFrontEndAccessException {
-		if (numberPlateDAO.authorizeUsernameAndId(username, numberPlateId)){
-			numberPlateDAO.deleteNumberPlate(numberPlateId);
-		} else {
-			throw new InvalidFrontEndAccessException();
+		try {
+			if (numberPlateDAO.authorizeUsernameAndId(username, numberPlateId)){
+				numberPlateDAO.deleteNumberPlate(numberPlateId);
+			} else {
+				throw new InvalidFrontEndAccessException();
+			}
+		} catch (InvalidDataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
 	//Get details of numberPlate by it's id
 	@Override
 	@Transactional
-	public String getDetailsOfNumberPlate(String username, Integer numberPlateId) throws InvalidFrontEndAccessException {
-		if (numberPlateDAO.authorizeUsernameAndId(username, numberPlateId)){
-			return numberPlateDAO.getDetailsOfNumberPlates(numberPlateId);
-		} else {
-			throw new InvalidFrontEndAccessException();
+	public NumberPlateEntity queryNumberPlate(String username, Integer numberPlateId) throws InvalidFrontEndAccessException {
+		try {
+			if (numberPlateDAO.authorizeUsernameAndId(username, numberPlateId)){
+				return numberPlateDAO.queryNumberPlate(numberPlateId);
+			} else {
+				throw new InvalidFrontEndAccessException();
+			}
+		} catch (InvalidDataAccessException e){
+			logger.info("No any number plate or data access error!");
+			return null;
 		}
 	}
 	
 	//This setter will be used by Spring context to inject the dao's instance
 	public void setNumberPlateDAO(NumberPlateDAO numberPlateDAO) {
 		this.numberPlateDAO = numberPlateDAO;
-	}
-	
-	private String Base64Decode(String value) {
-		try {
-			return new String( Base64.decode(value.getBytes("UTF-8")), "UTF-8" ) ;
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			return null;
-		}
 	}
 	
 	private String Base64Encode(String value) {
@@ -98,12 +99,5 @@ public class NumberPlateManagerImpl implements NumberPlateManager {
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
-	private List<NumberPlateEntity> Base64Decode(List<NumberPlateEntity> entities ){
-		for (NumberPlateEntity entity : entities){
-			entity.setFileName(Base64Decode(entity.getFileName()));
-		}
-		return entities;
 	}
 }

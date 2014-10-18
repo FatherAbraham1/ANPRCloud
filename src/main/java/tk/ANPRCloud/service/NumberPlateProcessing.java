@@ -80,8 +80,8 @@ public class NumberPlateProcessing{
 	}
 	
 	public void ChainProc(){
-		for (int i = 0; i < FiltersChain.size(); i++) {
-			result = FiltersChain.get(i).proc(result);
+		for (NumberPlateFilter filter : FiltersChain ) {
+			result = filter.proc(result);
 		}
 	}
 	
@@ -116,12 +116,15 @@ public class NumberPlateProcessing{
 		}
 		Mat result = new Mat();
 		Imgproc.resize(squareImage, result, new Size(350, 350), 0, 0, Imgproc.INTER_LINEAR);
-		return mat2Base64String(result);
+		return "data:image/jpg;base64," + mat2Base64String(result);
 	}
 	
 	public String getDetails(){
-		String myString = new JSONObject().put("JSON", "Hello, World!").toString();
-		System.out.println(myString);
-		return myString;
+		//String myString = new JSONObject().put("JSON", "Hello, World!").toString();
+		JSONObject jSONObject = new JSONObject();
+		for (int i = 0; i < FiltersChain.size(); i++) {
+			jSONObject.put(options[i][0], "data:image/jpg;base64," + mat2Base64String(FiltersChain.get(i).getResult()));
+		}
+		return jSONObject.toString();
 	}
 }

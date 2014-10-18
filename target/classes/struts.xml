@@ -19,7 +19,7 @@
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
      
     <!-- Normal Action mappings are defined here -->
-	<package name="default" namespace="" extends="struts-default">
+	<package name="default" namespace="" extends="json-default">
 		<interceptors>
 			<interceptor name="loginInterceptor" class="loginInterceptor"></interceptor>
 			<interceptor-stack name="loginDefaultStack">
@@ -32,16 +32,24 @@
 			<result name="login">/view/login.jsp</result>
 		</global-results>		 
 		<action name="login" class="userManagerAction" method="login">
-			<result type="redirect">${goingToURL}</result>
-			<result name="input">/view/login.jsp</result>
+			<!-- <result type="redirect">${goingToURL}</result>
+			<result name="input">/view/login.jsp</result> -->
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
 			<interceptor-ref name="defaultStack"></interceptor-ref>
 		</action>
-		<action name="logout" class="userManagerAction" method="logout"></action>
-		
-		
+		<action name="logout" class="userManagerAction" method="logout">
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
+		</action>
 		<action name="register" class="userManagerAction" method="register">
-			<result type="redirect">/login</result>
-			<result name="input">/view/register.jsp</result>
+<!-- 			<result type="redirect">/login</result>
+			<result name="input">/view/register.jsp</result> -->
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
 			<interceptor-ref name="defaultStack"></interceptor-ref>
 		</action>
 		
@@ -50,23 +58,33 @@
 	    	 1) class is set to 'editNumberPlateAction' which is bean defined by Spring context
 	    	 2) We have given the method to be called here as well;
 	   	-->
-		<action name="list" class="editNumberPlateAction" method="listNumberPlates">
-			<result>/view/editNumberPlateList.jsp</result>
+		<action name="list" class="listAction" method="listNumberPlates">
+			<!-- <result>/view/editNumberPlateList.jsp</result> -->
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
 		</action>
-		<action name="add" class="editNumberPlateAction" method="addNumberPlate">
-			<result name="success">./view/uploadSuccessful.jsp</result>
-			<result name="*">./view/uploadFailed.json</result>	
+		<action name="add" class="addAction" method="addNumberPlate">
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
 		</action>
-		<action name="delete/*" class="editNumberPlateAction" method="deleteNumberPlate">
+		<action name="delete/*" class="deleteAction" method="deleteNumberPlate">
 		    <param name="numberPlate.id">{1}</param>
-			<result type="redirect">/list</result>
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
 		</action>
-		<action name="*" class="editNumberPlateAction" method="listNumberPlates">
-			<result>/view/index.html</result>
-		</action>
-		<action name="detail/*" class="editNumberPlateAction" method="detailOfNumberPlate">
+		<action name="query/*" class="queryAction" method="queryNumberPlate">
 			<param name="numberPlate.id">{1}</param>
-			<result name="success">/view/detailOfNumberPlate.jsp</result>
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
+		</action>
+		<action name="*" >
+			<result>/index.html</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
 		</action>
 	</package>
 	

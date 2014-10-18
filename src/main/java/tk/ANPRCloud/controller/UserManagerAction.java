@@ -1,5 +1,7 @@
 package tk.ANPRCloud.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -8,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.interceptor.CookiesAware;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 import org.apache.struts2.interceptor.SessionAware;
@@ -16,13 +17,18 @@ import org.apache.struts2.interceptor.SessionAware;
 import tk.ANPRCloud.exceptions.InvalidUsernameOrPasswordException;
 import tk.ANPRCloud.service.UserDetails;
 import tk.ANPRCloud.service.UserManager;
+
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.Preparable;
 
 
-public class UserManagerAction extends ActionSupport implements Preparable,ServletResponseAware, ServletRequestAware, SessionAware{
+public class UserManagerAction extends ActionSupport implements ServletResponseAware, ServletRequestAware, SessionAware{
 
-	//Employee manager injected by spring context; This is cool !!
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	//userManager injected by spring context; This is cool !!
 	private UserManager userManager;
 	private String username;
 	private String password;
@@ -32,6 +38,7 @@ public class UserManagerAction extends ActionSupport implements Preparable,Servl
 	private HttpServletRequest request;
 	private Map session;
 	private String goingToURL;
+	private String result;
 
 	@SuppressWarnings("unchecked")
 	public String login() throws Exception{
@@ -50,12 +57,14 @@ public class UserManagerAction extends ActionSupport implements Preparable,Servl
 			} else {
 				setGoingToURL("index.action");
 			}
+			result = SUCCESS;
 			return SUCCESS;
 		} catch (InvalidUsernameOrPasswordException e) {
-			addActionMessage("user name or password is not corrected.");
-			return INPUT;
+			result = "User name or password is not corrected.";
+			return SUCCESS;
 		} catch (Exception e){
-			return INPUT;
+			result = "BMW.";
+			return SUCCESS;
 		}
 	}
 	
@@ -72,30 +81,34 @@ public class UserManagerAction extends ActionSupport implements Preparable,Servl
 					cookie.setValue("");
 					cookie.setMaxAge(0);
 					response.addCookie(cookie);
-					return "login";
+					result = SUCCESS;
+					return SUCCESS;
 				}
 			}
 		}
-		return "login";
+		result = SUCCESS;
+		return SUCCESS;
 	}
 
 	public String register() throws Exception{
 		try {
 			if(username.equals("") || password.equals("")){
-				addActionMessage("Username or password is empty.");
-				return INPUT;
+				result = "Username or password is empty.";
+				return SUCCESS;
 			} else if(!password.equals(confirmPassword)){
-				addActionMessage("Confirm password not matchs the password.");
-				return INPUT;
+				result = "Confirm password not matchs the password.";
+				return SUCCESS;
 			} else if (userManager.usernameExist(username)){
-				addActionMessage("Username exist.");
-				return INPUT;				
+				result = "Username exist.";
+				return SUCCESS;			
 			} else {
 				userManager.addUser(username, password);
+				result = SUCCESS;
 				return SUCCESS;
 			}
 		} catch (Exception e){
-			return INPUT;
+			result = "BMW";
+			return SUCCESS;
 		}
 	}
 	
@@ -107,46 +120,34 @@ public class UserManagerAction extends ActionSupport implements Preparable,Servl
 	}
 	public void setSession(Map session) {
 		this.session = session;
-	}
-	@Override
-	public void prepare() throws Exception {
-		// TODO Auto-generated method stub
-	}
-	
+	}	
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
 	}
 	
-	public String getGoingToURL() {
-		return goingToURL;
-	}
 	public void setGoingToURL(String goingToURL) {
 		this.goingToURL = goingToURL;
 	}
-	public boolean isRememberMe() {
+/*	public boolean isRememberMe() {
 		return rememberMe;
-	}
+	}*/
 	public void setRememberMe(boolean rememberMe) {
 		this.rememberMe = rememberMe;
 	}
-	public String getLoginName() {
-		return username;
-	}
 	public void setLoginName(String username) {
 		this.username = username;
-	}
-	public String getPassword() {
-		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
+	}
+	
+	public List<String> getResult(){
+		List<String> resultList = new ArrayList<String>();
+		resultList.add(this.result);
+		return resultList;
 	}
 }

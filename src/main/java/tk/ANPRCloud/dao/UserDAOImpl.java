@@ -18,7 +18,6 @@ public class UserDAOImpl implements UserDAO {
 	//This setter will be used by Spring context to inject the sessionFactory instance
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
-	
 	}
 
 	@SuppressWarnings("unchecked") 

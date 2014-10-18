@@ -18,12 +18,37 @@
     
     <!-- This bean has been referred fron struts.xml file; So type it correctly; -->
     <!-- Make scope prototype; This is really important. -->
-    <bean name="editNumberPlateAction" class="tk.ANPRCloud.controller.EditNumberPlateAction" scope="prototype">
+
+    <bean name="listAction" class="tk.ANPRCloud.controller.listAction" scope="prototype">
+	     <property name="numberPlateManager">
+	        <ref bean="numberPlateManager"/>
+	     </property>
+    </bean> 
+    
+    <bean name="addAction" class="tk.ANPRCloud.controller.listAction" scope="prototype">
+	     <property name="numberPlateManager">
+	        <ref bean="numberPlateManager"/>
+	     </property>
+    </bean> 
+    
+    <bean name="deleteAction" class="tk.ANPRCloud.controller.deleteAction" scope="prototype">
+	     <property name="numberPlateManager">
+	        <ref bean="numberPlateManager"/>
+	     </property>
+    </bean>     
+    
+    <bean name="queryAction" class="tk.ANPRCloud.controller.queryAction" scope="prototype">
+	     <property name="numberPlateManager">
+	        <ref bean="numberPlateManager"/>
+	     </property>
+    </bean> 
+    
+<!--     <bean name="editNumberPlateAction" class="tk.ANPRCloud.controller.EditNumberPlateAction" scope="prototype">
 	     <property name="numberPlateManager">
 	        <ref bean="numberPlateManager"/>
 	     </property>
     </bean>
-    
+     -->
     <!-- These beans are injected automatically by spring context -->
     <bean id="numberPlateDAO" class="tk.ANPRCloud.dao.NumberPlateDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>

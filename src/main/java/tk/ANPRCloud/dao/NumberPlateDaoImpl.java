@@ -24,9 +24,9 @@ public class NumberPlateDaoImpl implements NumberPlateDAO
 	//This method return list of numberPlates in database
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<NumberPlateEntity> getAllNumberPlates(String username) throws InvalidDataAccessException {
+	public List<Integer> getAllNumberPlates(String username) throws InvalidDataAccessException {
 		try{
-			Query query = this.sessionFactory.getCurrentSession().createQuery("from NumberPlateEntity WHERE OWNER = :owner");
+			Query query = this.sessionFactory.getCurrentSession().createQuery("SELECT id from NumberPlateEntity WHERE OWNER = :owner");
 			query.setParameter("owner", username);
 			return query.list();
 		} catch (Exception e){
@@ -50,25 +50,24 @@ public class NumberPlateDaoImpl implements NumberPlateDAO
 	}
 
 	@Override
-	public boolean authorizeUsernameAndId(String username, Integer numberPlateId) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean authorizeUsernameAndId(String username, Integer numberPlateId) throws InvalidDataAccessException {
+		try{
+			Query query = this.sessionFactory.getCurrentSession().createQuery("SELECT Owner from NumberPlateEntity WHERE Id = :id");
+			query.setParameter("id", numberPlateId);
+			return query.list().get(0).equals(username);
+		} catch (Exception e){
+			throw new InvalidDataAccessException();
+		}
 	}
 
 	@Override
-	public String getDetailsOfNumberPlates(Integer numberPlateId) {
+	public NumberPlateEntity queryNumberPlate(Integer numberPlateId) throws InvalidDataAccessException {
 		try{
-			Query query = this.sessionFactory.getCurrentSession().createQuery("SELECT DETAILS from NumberPlateEntity WHERE Id = :id");
-			query.setParameter("Id", numberPlateId);
-			List<String> a = query.list();
+			Query query = this.sessionFactory.getCurrentSession().createQuery("from NumberPlateEntity WHERE Id = :id");
+			query.setParameter("id", numberPlateId);
+			return (NumberPlateEntity)query.list().get(0);
 		} catch (Exception e){
-			try {
-				throw new InvalidDataAccessException();
-			} catch (InvalidDataAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			throw new InvalidDataAccessException();
 		}
-		return null;
 	}
 }

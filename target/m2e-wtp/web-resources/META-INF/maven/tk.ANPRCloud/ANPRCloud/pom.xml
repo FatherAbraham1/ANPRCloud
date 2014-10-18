@@ -190,6 +190,12 @@
                 <artifactId>struts2-spring-plugin</artifactId>
                 <version>2.3.16.2</version>
         </dependency>
+        <!-- Struts 2 JSON Plugins -->
+    <dependency>
+          <groupId>org.apache.struts</groupId>
+	  <artifactId>struts2-json-plugin</artifactId>
+	  <version>2.3.16.2</version>
+    </dependency>
             
         
   </dependencies>

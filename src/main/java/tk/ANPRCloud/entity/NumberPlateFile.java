@@ -44,7 +44,6 @@ public class NumberPlateFile {
 		return filename;
 	}
 	public void setFilename(String filename) {
-		System.out.println(filename);
 		this.filename = filename;
 	}
 	public BufferedImage getImage() {
@@ -67,6 +66,4 @@ public class NumberPlateFile {
 		}
 		return true;
 	}
-	
-
 }
