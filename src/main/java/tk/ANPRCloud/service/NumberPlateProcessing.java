@@ -23,20 +23,27 @@ import tk.ANPRCloud.util.Base64;
 import tk.ANPRCloud.service.fliters.Crop;
 
 public class NumberPlateProcessing{
-	private static List<NumberPlateFilter> FiltersChain = new ArrayList<NumberPlateFilter>();
+	private static NumberPlateFiltersChain PreProcessing;
 	private Mat src;
 	private Mat result;
-	static private String[][] options =  {{"Grayscale","default"}, {"Sobel","default"}, {"Binarization","default"}};
+	static private String[][][] options =  {{{"Grayscale","default"}, {"Sobel","default"}, {"Binarization","default"}}};
 	
 	static {
 		//Load the JNI library
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 		
+	}
+	
+	// Constructor
+	public NumberPlateProcessing(BufferedImage image) {	
+		//Routine for processing
+		this.src = this.bufferedImage2Mat(image);
+		PreProcessing = new NumberPlateFiltersChain(this.src);
 		//Append the filter chain
 		for (int i = 0; i < options.length; i++){
 			//Class.forName(options[i][0]).getConstructor(String.class).newInstance(options[i][1]);
 			try {
-				FiltersChain.add((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[i][0]).getConstructor(String.class).newInstance(options[i][1])));
+				PreProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[0][i][0]).getConstructor(String.class).newInstance(options[0][i][1])));
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -60,29 +67,12 @@ public class NumberPlateProcessing{
 				e.printStackTrace();
 			}
 		}
-/*		FiltersChain.add((NumberPlateFilter)(new Grayscale("default")));
-		FiltersChain.add((NumberPlateFilter)(new Sobel("default")));
-		FiltersChain.add((NumberPlateFilter)(new Binarization("127")));*/
-	}
-	
-	public NumberPlateProcessing(BufferedImage image) {	
-		//Routine for processing
-		this.src = this.bufferedImage2Mat(image);
-		this.result = src.clone();
+		PreProcessing.chainProc();
 	}
 	
 	public String calculateNumber(){
-
 		//Do the processing
-		this.ChainProc();
-		
 		return "fuck";
-	}
-	
-	public void ChainProc(){
-		for (NumberPlateFilter filter : FiltersChain ) {
-			result = filter.proc(result);
-		}
 	}
 	
 	public Mat bufferedImage2Mat(BufferedImage image)
@@ -108,11 +98,13 @@ public class NumberPlateProcessing{
 	public String getThumbnail() {
 		int w = this.src.width();
 		int h =  this.src.height();
+		ArrayList<Object> resultList = new ArrayList<Object>();
+		resultList.add(this.src);
 		Mat squareImage;
 		if (w > h){
-			squareImage = (new Crop((w - h) / 2,0, h, h)).proc(this.src);
+			squareImage = (Mat)(new Crop((w - h) / 2,0, h, h)).proc(resultList).get(0);
 		} else {
-			squareImage = (new Crop(0, (h - w) / 2, w, w)).proc(this.src);
+			squareImage = (Mat)(new Crop(0, (h - w) / 2, w, w)).proc(resultList).get(0);
 		}
 		Mat result = new Mat();
 		Imgproc.resize(squareImage, result, new Size(350, 350), 0, 0, Imgproc.INTER_LINEAR);
@@ -122,8 +114,8 @@ public class NumberPlateProcessing{
 	public String getDetails(){
 		//String myString = new JSONObject().put("JSON", "Hello, World!").toString();
 		JSONObject jSONObject = new JSONObject();
-		for (int i = 0; i < FiltersChain.size(); i++) {
-			jSONObject.put(options[i][0], "data:image/jpg;base64," + mat2Base64String(FiltersChain.get(i).getResult()));
+		for (int i = 0; i < PreProcessing.size(); i++) {
+			jSONObject.put(options[0][i][0], "data:image/jpg;base64," + mat2Base64String((Mat)PreProcessing.get(i).getResult().get(0)));
 		}
 		return jSONObject.toString();
 	}

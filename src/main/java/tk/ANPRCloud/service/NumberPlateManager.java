@@ -9,7 +9,7 @@ import tk.ANPRCloud.exceptions.InvalidFrontEndAccessException;
 
 public interface NumberPlateManager {
 	//This method will be called when a numberPlate object is added
-    public void addNumberPlate(String username, NumberPlateFile numberPlateFile);
+    public int addNumberPlate(String username, NumberPlateFile numberPlateFile);
     //This method return list of numberPlates in database
     public List<Integer> getAllNumberPlates(String username);
     //Deletes a numberPlate by it's id

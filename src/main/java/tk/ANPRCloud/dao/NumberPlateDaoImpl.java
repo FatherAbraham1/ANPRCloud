@@ -17,8 +17,9 @@ public class NumberPlateDaoImpl implements NumberPlateDAO
 	
     //This method will be called when a numberPlate object is added
 	@Override
-	public void addNumberPlate(NumberPlateEntity numberPlate) {
+	public int addNumberPlate(NumberPlateEntity numberPlate) {
 		this.sessionFactory.getCurrentSession().save(numberPlate);
+		return numberPlate.getId();
 	}
 
 	//This method return list of numberPlates in database

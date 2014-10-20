@@ -7,4 +7,8 @@ public class addAction extends EditNumberPlateAction {
 	public List<String> getResult() {
 		return this.result;
 	}
+	
+	public int getId(){
+		return this.Id;
+	}
 }

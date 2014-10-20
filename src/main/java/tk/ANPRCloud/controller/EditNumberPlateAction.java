@@ -38,6 +38,7 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 	//Result of addAction and deleteAction
 	public List<String> result = new ArrayList<String>();
 	
+	public int Id;
 	/*
 	 *  Private properties for internal using
 	 */
@@ -61,7 +62,12 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 	//This method return list of numberPlates in database
 	public String listNumberPlates() {
 		logger.info("listNumberPlates method called");
-		numberPlates = numberPlateManager.getAllNumberPlates(getUsernameFromCurrentSession());
+		if (getUsernameFromCurrentSession().equals("")) {
+			numberPlates = null;
+		} else {
+			numberPlates = numberPlateManager.getAllNumberPlates(getUsernameFromCurrentSession());
+		}
+		result.add(SUCCESS);
 		return SUCCESS;
 	}
 
@@ -69,7 +75,7 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 	public String addNumberPlate() {
 		logger.info("addNumberPlate method called");
 		if (numberPlateFile.storeImageFile()){
-			numberPlateManager.addNumberPlate(getUsernameFromCurrentSession(), numberPlateFile);
+			Id = numberPlateManager.addNumberPlate(getUsernameFromCurrentSession(), numberPlateFile);
 			result.add(SUCCESS);
 		} else {
 			result.add(ERROR);
@@ -100,6 +106,9 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 		}
 		return SUCCESS;
 	}
+	public String nullAction(){
+		return SUCCESS;
+	}
 	
 	
 	/*
@@ -110,6 +119,7 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 		this.numberPlateManager = numberPlateManager;
 	}
 
+	
 /*	public List<Integer> getNumberPlates() {
 		return numberPlates;
 	}

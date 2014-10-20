@@ -25,7 +25,7 @@
 	     </property>
     </bean> 
     
-    <bean name="addAction" class="tk.ANPRCloud.controller.listAction" scope="prototype">
+    <bean name="addAction" class="tk.ANPRCloud.controller.addAction" scope="prototype">
 	     <property name="numberPlateManager">
 	        <ref bean="numberPlateManager"/>
 	     </property>
@@ -38,6 +38,12 @@
     </bean>     
     
     <bean name="queryAction" class="tk.ANPRCloud.controller.queryAction" scope="prototype">
+	     <property name="numberPlateManager">
+	        <ref bean="numberPlateManager"/>
+	     </property>
+    </bean> 
+    
+    <bean name="nullAction" class="tk.ANPRCloud.controller.nullAction" scope="prototype">
 	     <property name="numberPlateManager">
 	        <ref bean="numberPlateManager"/>
 	     </property>

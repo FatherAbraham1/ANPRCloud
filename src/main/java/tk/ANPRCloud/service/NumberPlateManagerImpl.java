@@ -29,7 +29,7 @@ public class NumberPlateManagerImpl implements NumberPlateManager {
 	//This method will be called when a numberPlate object is added
 	@Override
 	@Transactional
-	public void addNumberPlate(String username, NumberPlateFile numberPlateFile) {
+	public int addNumberPlate(String username, NumberPlateFile numberPlateFile) {
 		numberPlateEntity = new NumberPlateEntity();
 		// Set the numberPlateEntity properties
 		numberPlateProcessing = new NumberPlateProcessing(numberPlateFile.getImage());
@@ -39,7 +39,7 @@ public class NumberPlateManagerImpl implements NumberPlateManager {
 		numberPlateEntity.setOwner(username);
 		numberPlateEntity.setNumber(numberPlateProcessing.calculateNumber());
 		numberPlateEntity.setDetails(numberPlateProcessing.getDetails());
-		numberPlateDAO.addNumberPlate(numberPlateEntity);
+		return numberPlateDAO.addNumberPlate(numberPlateEntity);
 	}
 	
 	//This method return list of numberPlates in database
@@ -66,7 +66,7 @@ public class NumberPlateManagerImpl implements NumberPlateManager {
 			}
 		} catch (InvalidDataAccessException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new InvalidFrontEndAccessException();
 		}
 	}
 	
@@ -76,7 +76,9 @@ public class NumberPlateManagerImpl implements NumberPlateManager {
 	public NumberPlateEntity queryNumberPlate(String username, Integer numberPlateId) throws InvalidFrontEndAccessException {
 		try {
 			if (numberPlateDAO.authorizeUsernameAndId(username, numberPlateId)){
-				return numberPlateDAO.queryNumberPlate(numberPlateId);
+				NumberPlateEntity entity = numberPlateDAO.queryNumberPlate(numberPlateId);
+				numberPlateDAO.deleteNumberPlate(entity.getId());
+				return entity;
 			} else {
 				throw new InvalidFrontEndAccessException();
 			}

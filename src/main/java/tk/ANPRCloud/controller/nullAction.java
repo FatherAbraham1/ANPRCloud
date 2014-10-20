@@ -3,12 +3,9 @@ package tk.ANPRCloud.controller;
 import java.util.List;
 
 @SuppressWarnings("serial")
-public class listAction extends EditNumberPlateAction {
+public class nullAction extends EditNumberPlateAction {
 	public List<String> getResult() {
+		this.result.add(ERROR);
 		return this.result;
-	}
-	
-	public List<Integer> getNumberPlates() {
-		return this.numberPlates;
 	}
 }

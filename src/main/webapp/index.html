@@ -88,10 +88,51 @@
 		<img src="images/1oo8.svg" />
 	</div>
 
+<!-- 	<ul class="clearing-thumbs" data-clearing="" style="">
+	  <li><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/comet.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/comet-th-sm.jpg"></a></li>
+	  <li class=""><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/earth.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/earth-th-sm.jpg"></a></li>
+	  <li><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/launch.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/launch-th-sm.jpg"></a></li>
+	  <li class=""><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/satelite.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/satelite-th-sm.jpg"></a></li>
+	  <li class=""><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/space.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/space-th-sm.jpg"></a></li>
+	  <li class="visible"><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/spacewalk.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/spacewalk-th-sm.jpg"></a></li>
+	</ul> -->
+	
+
+<form id="target" action="./login.action" method="post">
+	<input type="text" name="loginName" value="" id="login_loginName" />
+	<input type="password" name="password" id="login_password" />
+	<input type="checkbox" name="rememberMe" value="true" id="login_rememberMe">
+	<input type="hidden" id="__checkbox_login_rememberMe" name="__checkbox_rememberMe" value="true">
+	<input type="submit" id="login_0" value="Login">
+</form>
+
 	<script src="js/vendor/jquery.js"></script>
 	<script src="js/vendor/fastclick.js"></script>
 	<script src="js/foundation.min.js"></script>
 	<script src="script/dropzone.js"></script>
 	<script src="script/uploader.js"></script>
+	<script>
+		/* // Attach a submit handler to the form
+		$( "#target" ).submit(function( event ) {
+		 
+		  // Stop form from submitting normally
+		  event.preventDefault();
+		 
+		  // Get some values from elements on the page:
+		  var $form = $( this ),
+		  	loginName = $form.find( "input[name='loginName']" ).val(),
+		  	password = $form.find( "input[name='password']" ).val(),
+		    url = $form.attr( "action" );
+		 
+		  // Send the data using post
+		  var posting = $.post( url, { loginName: loginName, password: password } );
+		 
+		  // Put the results in a div
+		  posting.done(function( data ) {
+		    var content = $( data ).find( "#content" );
+		    $( "#result" ).empty().append( content );
+		  });
+		}); */
+	</script>
 </body>
 </html>
