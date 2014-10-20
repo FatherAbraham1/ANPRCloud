@@ -48,6 +48,7 @@ public class UserManagerAction extends ActionSupport implements ServletResponseA
 				Cookie cookie = new Cookie(LoginInterceptor.COOKIE_REMEMBERME_KEY, userDetails.getCookieString());
 				cookie.setMaxAge(60 * 60 * 24 * 14);
 				response.addCookie(cookie);
+				rememberMe = false;
 			}
 			session.put(LoginInterceptor.USER_SESSION_KEY, userDetails);
 			String goingToURL = (String) session.get(LoginInterceptor.GOING_TO_URL_KEY);
@@ -103,6 +104,8 @@ public class UserManagerAction extends ActionSupport implements ServletResponseA
 				return SUCCESS;			
 			} else {
 				userManager.addUser(username, password);
+				session.put(LoginInterceptor.USER_SESSION_KEY, (UserDetails)userManager.userLoginWithUsernameAndPassword(username, password));
+				
 				result = SUCCESS;
 				return SUCCESS;
 			}

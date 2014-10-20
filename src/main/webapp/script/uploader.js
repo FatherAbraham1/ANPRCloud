@@ -10,7 +10,7 @@ Dropzone.options.uploader = {
   acceptedFiles: "image/*",
   thumbnailWidth: 350,
   thumbnailHeight: 350,
-  clickable: "form .bigplus, form",
+  clickable: "form .bigplus, form#uploader",
   previewTemplate:  "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n   <div class=\"dz-size\" data-dz-size></div>\n  <div class=\"dz-placeholder\" ></div>\n <div class=\"dz-response\" ><strong><br/></strong></div>\n  <img data-dz-thumbnail />\n <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  </div>\n    <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n <a class=\"dz-detail button tiny success \">Detail</a></div>",
   dictRemoveFile: "",
   dictCancelUpload: "",
@@ -65,7 +65,7 @@ Dropzone.prototype.addPreview = function(fileDetail, data) {
 
 
 // Create dropzones programmatically
-var myDropzone = new Dropzone("form#uploader", { url: "./add"});
+var myDropzone = new Dropzone("#uploader", { url: "./add"});
 
 // Listen to events
 myDropzone.on("success", function(file) {
@@ -76,6 +76,3 @@ myDropzone.on("success", function(file) {
 myDropzone.on("removedfile", function(file) {
 	console.log(file);
 });
-
-// Initlize foundation components 
-$(document).foundation();

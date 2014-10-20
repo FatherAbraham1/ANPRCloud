@@ -22,6 +22,7 @@
 	<link rel="stylesheet" type="text/css" href="css/dropzone.css" />
     <link rel="stylesheet" type="text/css" href="css/uploader.css" />
     <link rel="stylesheet" type="text/css" href="css/font.css" />
+    <link rel="stylesheet" type="text/css" href="css/login.css" />
 </head>
 <body>
 	<div class="sticky">
@@ -48,9 +49,9 @@
 	      <li class="has-dropdown">
 	        <a href="#">Account</a>
 	        <ul class="dropdown">
-	          <li><a href="http://www.google.com">Login in</a></li>
-	          <li><a href="#">Sign up</a></li>
-	          <li><a href="#">Login out</a></li>
+	          <li><a href="#" id="login-dropdown" data-reveal-id="login-modeal">Login in</a></li>
+	          <li><a href="#" id="register-dropdown" data-reveal-id="register-modeal">Register</a></li>
+	          <li><a href="#" id="logout-dropdown" >Login out</a></li>
 	        </ul>
 	      </li>
 	    </ul>
@@ -96,43 +97,71 @@
 	  <li class=""><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/space.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/space-th-sm.jpg"></a></li>
 	  <li class="visible"><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/spacewalk.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/spacewalk-th-sm.jpg"></a></li>
 	</ul> -->
-	
 
-<form id="target" action="./login.action" method="post">
-	<input type="text" name="loginName" value="" id="login_loginName" />
-	<input type="password" name="password" id="login_password" />
-	<input type="checkbox" name="rememberMe" value="true" id="login_rememberMe">
-	<input type="hidden" id="__checkbox_login_rememberMe" name="__checkbox_rememberMe" value="true">
-	<input type="submit" id="login_0" value="Login">
-</form>
+	<div id="login-modeal"  class="reveal-modal" data-reveal>
+	  <h2>Login in</h2>
+		<form id="login-form" action="./login.action" method="post" data-abide>
+		  <div class="name-field">
+		    <label>Username <small>required</small>
+		      <input name="loginName" type="text" required pattern="[a-zA-Z0-9]+">
+		    </label>
+		    <small class="error">Username is required and must be a string.</small>
+		  </div>
+		  <div class="name-field">
+		    <label>Password <small>required</small>
+		      <input name="password" type="password" required pattern="[a-zA-Z0-9]+">
+		    </label>
+		    <small class="error">Password is required and must be a string.</small>
+		  </div>
+		  <div class="switch">
+		  	<input id="rememberMe" name="rememberMe" type="checkbox" value="false" >
+		  	<label for="rememberMe"></label>
+		  </div>
+		  <div class="rememberme"> Remember Me <small>Login with cookies</small></div><br/>
+		  <button id="register" class="buttom tiny success" >Register</button>
+		  <button class="buttom tiny" type="submit">Submit</button>
+		</form>
+		<small id="result" class="error" style="display:none">Time out</small>
+	  	<a class="close-reveal-modal">&#215;</a>
+	</div>
+
+	<div id="register-modeal"  class="reveal-modal" data-reveal>
+	  <h2>Register</h2>
+		<form id="register-form" action="./register.action" method="post" data-abide>
+		  <div class="name-field">
+		    <label>Username <small>required</small>
+		      <input name="loginName" type="text" required pattern="[a-zA-Z0-9]+">
+		    </label>
+		    <small class="error">Username is required and must be a string.</small>
+		  </div>
+		  <div class="name-field">
+		    <label>Password <small>required</small>
+		      <input name="password" type="password" required pattern="[a-zA-Z0-9]+">
+		    </label>
+		    <small class="error">Password is required and must be a string.</small>
+		  </div>
+		  <div class="name-field">
+		    <label>Confirm Password <small>required</small>
+		      <input name="confirmPassword" type="password" required pattern="[a-zA-Z0-9]+">
+		    </label>
+		    <small class="error">Password is required and must be a string.</small>
+		  </div>
+		  <button id="register" class="buttom tiny success" >Login</button>
+		  <button class="buttom tiny" type="submit">Submit</button>
+		</form>
+		<small id="result" class="error" style="display:none">Time out</small>
+	  	<a class="close-reveal-modal">&#215;</a>
+	</div>
 
 	<script src="js/vendor/jquery.js"></script>
 	<script src="js/vendor/fastclick.js"></script>
 	<script src="js/foundation.min.js"></script>
 	<script src="script/dropzone.js"></script>
 	<script src="script/uploader.js"></script>
+	<script src="script/usermanager.js"></script>
 	<script>
-		/* // Attach a submit handler to the form
-		$( "#target" ).submit(function( event ) {
-		 
-		  // Stop form from submitting normally
-		  event.preventDefault();
-		 
-		  // Get some values from elements on the page:
-		  var $form = $( this ),
-		  	loginName = $form.find( "input[name='loginName']" ).val(),
-		  	password = $form.find( "input[name='password']" ).val(),
-		    url = $form.attr( "action" );
-		 
-		  // Send the data using post
-		  var posting = $.post( url, { loginName: loginName, password: password } );
-		 
-		  // Put the results in a div
-		  posting.done(function( data ) {
-		    var content = $( data ).find( "#content" );
-		    $( "#result" ).empty().append( content );
-		  });
-		}); */
+		// Initlize foundation components 
+		$(document).foundation();
 	</script>
 </body>
 </html>
