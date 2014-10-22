@@ -54,6 +54,12 @@
 			</result>
 			<interceptor-ref name="defaultStack"></interceptor-ref>
 		</action>
+		<action name="checkUsername" class="userManagerAction" method="checkUsername">
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
+		</action>
+		
 		
 		
 	    <!-- Two things to Notice: 
@@ -79,6 +85,13 @@
 			</result>
 		</action>
 		<action name="query/*" class="queryAction" method="queryNumberPlate">
+			<param name="numberPlate.id">{1}</param>
+			<result type="json">
+				<param name="enableGZIP">true</param>
+			</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		<action name="details/*" class="queryAction" method="queryNumberPlateDetails">
 			<param name="numberPlate.id">{1}</param>
 			<result type="json">
 				<param name="enableGZIP">true</param>

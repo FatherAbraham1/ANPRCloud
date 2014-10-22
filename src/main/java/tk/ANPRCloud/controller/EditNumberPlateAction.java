@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
-import org.hibernate.ObjectNotFoundException;
 
 import tk.ANPRCloud.entity.NumberPlateEntity;
 import tk.ANPRCloud.entity.NumberPlateFile;
@@ -75,8 +74,9 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 	public String addNumberPlate() {
 		logger.info("addNumberPlate method called");
 		if (numberPlateFile.storeImageFile()){
-			Id = numberPlateManager.addNumberPlate(getUsernameFromCurrentSession(), numberPlateFile);
-			result.add(SUCCESS);
+			List<Object> idAndNumber = numberPlateManager.addNumberPlate(getUsernameFromCurrentSession(), numberPlateFile);
+			Id = (Integer)idAndNumber.get(0);
+			result.add((String)idAndNumber.get(1));
 		} else {
 			result.add(ERROR);
 		}
@@ -100,6 +100,18 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 		logger.info("queryNumberPlate method called");
 		try {
 			numberPlate = Base64Decode(numberPlateManager.queryNumberPlate(getUsernameFromCurrentSession(), numberPlate.getId()));
+			result.add(SUCCESS);
+		} catch (InvalidFrontEndAccessException e) {
+			result.add(ERROR);
+		}
+		return SUCCESS;
+	}
+	
+	//Query entity of a numberPlate by it's id passed in path parameter
+	public String queryNumberPlateDetails() {
+		logger.info("queryNumberPlate method called");
+		try {
+			numberPlate = numberPlateManager.queryNumberPlateDetails(getUsernameFromCurrentSession(), numberPlate.getId());
 			result.add(SUCCESS);
 		} catch (InvalidFrontEndAccessException e) {
 			result.add(ERROR);

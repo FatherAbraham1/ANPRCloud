@@ -115,6 +115,11 @@ public class UserManagerAction extends ActionSupport implements ServletResponseA
 		}
 	}
 	
+	public String checkUsername(){
+		result = SUCCESS;
+		return SUCCESS;
+	}
+	
 	public void setServletResponse(HttpServletResponse response) {
 		this.response = response;
 	}
@@ -148,9 +153,20 @@ public class UserManagerAction extends ActionSupport implements ServletResponseA
 		this.confirmPassword = confirmPassword;
 	}
 	
+	// public getters
 	public List<String> getResult(){
 		List<String> resultList = new ArrayList<String>();
 		resultList.add(this.result);
+		resultList.add(this.getUsername());
 		return resultList;
+	}
+	
+	private String getUsername(){
+		try {
+			return ((UserDetails)this.session.get(LoginInterceptor.USER_SESSION_KEY)).getUsername();
+		}
+		catch (Exception e){
+			return "";
+		}
 	}
 }

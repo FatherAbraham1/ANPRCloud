@@ -47,7 +47,7 @@
 	        </ul>
 	      </li>
 	      <li class="has-dropdown">
-	        <a href="#">Account</a>
+	        <a href="#" id="account-dropdown">Account</a>
 	        <ul class="dropdown">
 	          <li><a href="#" id="login-dropdown" data-reveal-id="login-modeal">Login in</a></li>
 	          <li><a href="#" id="register-dropdown" data-reveal-id="register-modeal">Register</a></li>
@@ -89,14 +89,10 @@
 		<img src="images/1oo8.svg" />
 	</div>
 
-<!-- 	<ul class="clearing-thumbs" data-clearing="" style="">
-	  <li><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/comet.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/comet-th-sm.jpg"></a></li>
-	  <li class=""><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/earth.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/earth-th-sm.jpg"></a></li>
-	  <li><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/launch.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/launch-th-sm.jpg"></a></li>
-	  <li class=""><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/satelite.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/satelite-th-sm.jpg"></a></li>
-	  <li class=""><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/space.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/space-th-sm.jpg"></a></li>
-	  <li class="visible"><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/spacewalk.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." src="http://foundation.zurb.com/docs/assets/img/examples/spacewalk-th-sm.jpg"></a></li>
-	</ul> -->
+	<ul class="clearing-thumbs" data-clearing="" style="display:none">
+	  <li><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/comet.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." ></a></li>
+	  <li><a class="th" href="http://foundation.zurb.com/docs/assets/img/examples/earth.jpg"><img data-caption="Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum." ></a></li>
+	</ul>
 
 	<div id="login-modeal"  class="reveal-modal" data-reveal>
 	  <h2>Login in</h2>
@@ -117,10 +113,11 @@
 		  	<input id="rememberMe" name="rememberMe" type="checkbox" value="false" >
 		  	<label for="rememberMe"></label>
 		  </div>
-		  <div class="rememberme"> Remember Me <small>Login with cookies</small></div><br/>
-		  <button id="register" class="buttom tiny success" >Register</button>
-		  <button class="buttom tiny" type="submit">Submit</button>
+		  <div class="rememberme"> Remember Me</div><br/>
 		</form>
+		<button id="register" class="buttom tiny success" >Register</button>
+		<button id="submit" class="buttom tiny">Submit</button>
+
 		<small id="result" class="error" style="display:none">Time out</small>
 	  	<a class="close-reveal-modal">&#215;</a>
 	</div>
@@ -146,9 +143,10 @@
 		    </label>
 		    <small class="error">Password is required and must be a string.</small>
 		  </div>
-		  <button id="register" class="buttom tiny success" >Login</button>
-		  <button class="buttom tiny" type="submit">Submit</button>
+		  
 		</form>
+		<button id="register" class="buttom tiny success" >Login</button>
+		<button id="submit" class="buttom tiny" >Submit</button>
 		<small id="result" class="error" style="display:none">Time out</small>
 	  	<a class="close-reveal-modal">&#215;</a>
 	</div>

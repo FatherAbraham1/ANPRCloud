@@ -16,4 +16,5 @@ public interface NumberPlateDAO
     //Authorize the id match the corresponding username
 	public boolean authorizeUsernameAndId(String username, Integer numberPlateId) throws InvalidDataAccessException;
 	public NumberPlateEntity queryNumberPlate(Integer numberPlateId) throws InvalidDataAccessException;
+	public NumberPlateEntity queryNumberPlateDetails(Integer numberPlateId) throws InvalidDataAccessException;
 }

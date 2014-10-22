@@ -64,9 +64,31 @@ public class NumberPlateDaoImpl implements NumberPlateDAO
 	@Override
 	public NumberPlateEntity queryNumberPlate(Integer numberPlateId) throws InvalidDataAccessException {
 		try{
-			Query query = this.sessionFactory.getCurrentSession().createQuery("from NumberPlateEntity WHERE Id = :id");
+			Query query = this.sessionFactory.getCurrentSession().createQuery("SELECT id,image,FileName,ContenType,number from NumberPlateEntity WHERE Id = :id");
 			query.setParameter("id", numberPlateId);
-			return (NumberPlateEntity)query.list().get(0);
+			List<Object> list = query.list();
+			Object[] objArray = (Object[])list.get(0);
+			NumberPlateEntity entity = new NumberPlateEntity();
+			entity.setId((Integer)objArray[0]);
+			entity.setImage((String)objArray[1]);
+			entity.setFileName((String)objArray[2]);
+			entity.setContenType((String)objArray[3]);
+			entity.setNumber((String)objArray[4]);
+			return entity;
+		} catch (Exception e){
+			throw new InvalidDataAccessException();
+		}
+	}
+	
+	@Override
+	public NumberPlateEntity queryNumberPlateDetails(Integer numberPlateId) throws InvalidDataAccessException {
+		try{
+			Query query = this.sessionFactory.getCurrentSession().createQuery("SELECT Details from NumberPlateEntity WHERE Id = :id");
+			query.setParameter("id", numberPlateId);
+			String details = (String)query.list().get(0);
+			NumberPlateEntity entity = new NumberPlateEntity();
+			entity.setDetails(details);
+			return entity;
 		} catch (Exception e){
 			throw new InvalidDataAccessException();
 		}

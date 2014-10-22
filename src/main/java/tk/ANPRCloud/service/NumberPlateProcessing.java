@@ -40,7 +40,7 @@ public class NumberPlateProcessing{
 		this.src = this.bufferedImage2Mat(image);
 		PreProcessing = new NumberPlateFiltersChain(this.src);
 		//Append the filter chain
-		for (int i = 0; i < options.length; i++){
+		for (int i = 0; i < options[0].length; i++){
 			//Class.forName(options[i][0]).getConstructor(String.class).newInstance(options[i][1]);
 			try {
 				PreProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[0][i][0]).getConstructor(String.class).newInstance(options[0][i][1])));
