@@ -23,51 +23,47 @@ import tk.ANPRCloud.util.Base64;
 import tk.ANPRCloud.service.fliters.Crop;
 
 public class NumberPlateProcessing{
-	private static NumberPlateFiltersChain PreProcessing;
+	private static NumberPlateFiltersChain PreProcessing, LocateProcessing;
 	private Mat src;
-	private Mat result;
-	static private String[][][] options =  {{{"Grayscale","default"}, {"Sobel","default"}, {"Binarization","default"}}};
+	private ArrayList<Object> srcList;
+	private ArrayList<Object> resultList;
+	static private String[][][] options = 
+		{
+			{{"RangeColor", "default"}, {"GaussianBlur", "5"}, {"Grayscale", "default"}, {"Sobel", "default"}, {"Binarization", "default"}},
+			{{"MaskColor","default"}}
+		};
 	
 	static {
 		//Load the JNI library
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
-		
 	}
 	
 	// Constructor
 	public NumberPlateProcessing(BufferedImage image) {	
 		//Routine for processing
+		srcList = new ArrayList<Object>();
 		this.src = this.bufferedImage2Mat(image);
-		PreProcessing = new NumberPlateFiltersChain(this.src);
-		//Append the filter chain
+		this.srcList.add(src);
+		
+		//Append the PreProcessing chain
+		PreProcessing = new NumberPlateFiltersChain(this.srcList);
 		for (int i = 0; i < options[0].length; i++){
-			//Class.forName(options[i][0]).getConstructor(String.class).newInstance(options[i][1]);
 			try {
 				PreProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[0][i][0]).getConstructor(String.class).newInstance(options[0][i][1])));
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (Exception e) {} 
 		}
 		PreProcessing.chainProc();
+		resultList = PreProcessing.getResult();
+		
+		//Append the LocateProcessing chain
+		resultList.add(this.src); // Apply the src image
+		LocateProcessing = new NumberPlateFiltersChain(resultList);
+		for (int i = 0; i < options[1].length; i++){
+			try {
+				LocateProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[1][i][0]).getConstructor(String.class).newInstance(options[1][i][1])));
+			} catch (Exception e) {} 
+		}
+		LocateProcessing.chainProc();
 	}
 	
 	public String calculateNumber(){
@@ -84,14 +80,14 @@ public class NumberPlateProcessing{
     }
 
 	public String mat2Base64String(Mat src) {
+		try {
 		MatOfByte matOfByte = new MatOfByte();
 		Highgui.imencode(".jpg", src, matOfByte);
 		byte[] bytes = matOfByte.toArray();
-		try {
 			String base64 = new String( Base64.encode(bytes), "ASCII");
 			return base64;
-		} catch (UnsupportedEncodingException e) {
-			return null;
+		} catch (Exception e) {
+			return "";
 		}
 	}
 	
@@ -115,7 +111,12 @@ public class NumberPlateProcessing{
 		//String myString = new JSONObject().put("JSON", "Hello, World!").toString();
 		JSONObject jSONObject = new JSONObject();
 		for (int i = 0; i < PreProcessing.size(); i++) {
-			jSONObject.put(options[0][i][0], "data:image/jpg;base64," + mat2Base64String((Mat)PreProcessing.get(i).getResult().get(0)));
+			jSONObject.put(options[0][i][0], "data:image/jpg;base64," + 
+				mat2Base64String((Mat)PreProcessing.get(i).getResult().get(0)));
+		}
+		for (int i = 0; i < LocateProcessing.size(); i++) {
+			jSONObject.put(options[1][i][0], "data:image/jpg;base64," + 
+				mat2Base64String((Mat)LocateProcessing.get(i).getResult().get(0)));
 		}
 		return jSONObject.toString();
 	}

@@ -7,11 +7,12 @@ function propertyRename(prop, src, dst){
 }
 
 var login_success = function(loginName){
-	// Update the dropdown list
+	// Update the dropdown list and thumbnails
 	$("#account-dropdown").html("<strong>"+loginName+"</strong>");
 	$("#login-dropdown").hide();
 	$("#register-dropdown").hide();
 	$("#logout-dropdown").show();
+	$(".dz-preview").remove();
 
 	// List the thunbnails
 	$.get( "./list", function( data ) {

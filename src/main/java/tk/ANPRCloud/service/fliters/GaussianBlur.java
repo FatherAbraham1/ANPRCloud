@@ -3,18 +3,18 @@ package tk.ANPRCloud.service.fliters;
 import java.util.ArrayList;
 
 import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import tk.ANPRCloud.service.NumberPlateFilter;
 
-public class Binarization implements NumberPlateFilter {
-	private int threshod = 127;
+public class GaussianBlur implements NumberPlateFilter {
+	private int m_GaussianBlurSize = 127;
 	private Mat result;
     ArrayList<Object> resultList = new ArrayList<Object>();
-	public Binarization(String thresthod){
+	public GaussianBlur(String thresthod){
 		if (thresthod != "default")  {
-			this.threshod = Integer.parseInt(thresthod);
+			this.m_GaussianBlurSize = Integer.parseInt(thresthod);
 		}
 	}
 
@@ -22,8 +22,8 @@ public class Binarization implements NumberPlateFilter {
 	public ArrayList<Object> proc(ArrayList<Object> src) {
 	    // Apply threshold to gray and generate binary image
 		result = new Mat();
-	    Imgproc.threshold((Mat)src.get(0), result, threshod, 255, Imgproc.THRESH_BINARY);
-	    //Highgui.imwrite("/tmp/bin.png", result);
+		Imgproc.GaussianBlur( (Mat)src.get(0), result, new Size(m_GaussianBlurSize, m_GaussianBlurSize), 
+				0, 0, Imgproc.BORDER_DEFAULT );
 	    resultList.add(result);
 		return resultList;
 	}

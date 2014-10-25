@@ -9,8 +9,8 @@ public class NumberPlateFiltersChain {
 	private List<NumberPlateFilter> FiltersChain = new ArrayList<NumberPlateFilter>();
 	ArrayList<Object> result = new ArrayList<Object>();
 	
-	public NumberPlateFiltersChain(Mat src){
-		this.result.add(src.clone());
+	public NumberPlateFiltersChain(ArrayList<Object> src){
+		this.result = src;
 	}
 	
 	public void addFilter(NumberPlateFilter filter){

@@ -8,11 +8,11 @@ import org.opencv.imgproc.Imgproc;
 
 import tk.ANPRCloud.service.NumberPlateFilter;
 
-public class Binarization implements NumberPlateFilter {
+public class Locate implements NumberPlateFilter {
 	private int threshod = 127;
 	private Mat result;
     ArrayList<Object> resultList = new ArrayList<Object>();
-	public Binarization(String thresthod){
+	public Locate(String thresthod){
 		if (thresthod != "default")  {
 			this.threshod = Integer.parseInt(thresthod);
 		}
@@ -20,7 +20,7 @@ public class Binarization implements NumberPlateFilter {
 
 	@Override
 	public ArrayList<Object> proc(ArrayList<Object> src) {
-	    // Apply threshold to gray and generate binary image
+	    // Apply threshold to gray and generate binary image to apply the mask
 		result = new Mat();
 	    Imgproc.threshold((Mat)src.get(0), result, threshod, 255, Imgproc.THRESH_BINARY);
 	    //Highgui.imwrite("/tmp/bin.png", result);

@@ -34,8 +34,8 @@ public class Sobel implements NumberPlateFilter {
 	    Core.convertScaleAbs( grad_x, abs_grad_x );
 	    Imgproc.Sobel( (Mat)src.get(0), grad_y, ddepth, 0, 1, 3, scale, delta, Imgproc.BORDER_DEFAULT );
 	    Core.convertScaleAbs( grad_y, abs_grad_y );
-	    Core.addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, result );
-	    Highgui.imwrite("/tmp/sobel.png", result);
+	    Core.addWeighted( abs_grad_x, 1, abs_grad_y, 0, 0, result );
+	    //Highgui.imwrite("/tmp/sobel.png", result);
 	    resultList.add(result);
 	    return resultList;
 	}
