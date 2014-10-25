@@ -17,5 +17,6 @@ public class TestProcessing {
 		System.out.println("Processing Unit Test");
 		image = ImageIO.read(new File("001.jpg"));
 		numberPlateProcessing =  new NumberPlateProcessing(image);
+		System.out.println("Processing Unit Test Success");
 	}
 }

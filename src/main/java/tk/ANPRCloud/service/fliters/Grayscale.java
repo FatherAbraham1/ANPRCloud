@@ -23,7 +23,7 @@ public class Grayscale implements NumberPlateFilter {
 		// Convert RGB to gray
 		result = new Mat();
 	    Imgproc.cvtColor((Mat)src.get(0), result, Imgproc.COLOR_RGB2GRAY );
-	    //Highgui.imwrite("/tmp/gray.png", result);
+	    Highgui.imwrite("/tmp/gray.png", result);
 	    resultList.add(result);
 		return resultList;
 	}

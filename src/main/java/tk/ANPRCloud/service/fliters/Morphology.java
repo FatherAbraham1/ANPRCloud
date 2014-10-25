@@ -2,19 +2,22 @@ package tk.ANPRCloud.service.fliters;
 
 import java.util.ArrayList;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.core.Size;
 
 import tk.ANPRCloud.service.NumberPlateFilter;
 
-public class Binarization implements NumberPlateFilter {
-	private int threshod = 127;
+public class Morphology implements NumberPlateFilter {
+	private int morphSizeWidth = 17;
+	private int morphSizeHeight = 3;
 	private Mat result;
     ArrayList<Object> resultList = new ArrayList<Object>();
-	public Binarization(String thresthod){
-		if (thresthod != "default")  {
-			this.threshod = Integer.parseInt(thresthod);
+	public Morphology(String morphSizeWidth){
+		if (morphSizeWidth != "default")  {
+			this.morphSizeWidth = Integer.parseInt(morphSizeWidth);
 		}
 	}
 
@@ -22,9 +25,9 @@ public class Binarization implements NumberPlateFilter {
 	public ArrayList<Object> proc(ArrayList<Object> src) {
 	    // Apply threshold to gray and generate binary image
 		result = new Mat();
-		//Imgproc.threshold((Mat)src.get(0), result, threshod, 255, Imgproc.THRESH_BINARY);
-		Imgproc.threshold((Mat)src.get(0), result, threshod, 255, Imgproc.THRESH_OTSU + Imgproc.THRESH_BINARY);
-	    //Highgui.imwrite("/tmp/bin.png", result);
+		Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(morphSizeWidth, morphSizeHeight) );
+		Imgproc.morphologyEx((Mat)src.get(0), result, Imgproc.MORPH_CLOSE, element);
+	    Highgui.imwrite("/tmp/Morphology.png", result);
 	    resultList.add(result);
 		return resultList;
 	}

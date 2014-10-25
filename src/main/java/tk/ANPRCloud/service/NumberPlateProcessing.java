@@ -23,14 +23,15 @@ import tk.ANPRCloud.util.Base64;
 import tk.ANPRCloud.service.fliters.Crop;
 
 public class NumberPlateProcessing{
-	private static NumberPlateFiltersChain PreProcessing, LocateProcessing;
+	private static NumberPlateFiltersChain PreProcessing, MorphProcessing, LocateProcessing;
 	private Mat src;
 	private ArrayList<Object> srcList;
 	private ArrayList<Object> resultList;
 	static private String[][][] options = 
 		{
 			{{"RangeColor", "default"}, {"GaussianBlur", "5"}, {"Grayscale", "default"}, {"Sobel", "default"}, {"Binarization", "default"}},
-			{{"MaskColor","default"}}
+			{{"MaskColor","default"}, {"Morphology","default"}, {"Contours", "default"}},
+			{{"Locate", "default"}}
 		};
 	
 	static {
@@ -43,7 +44,7 @@ public class NumberPlateProcessing{
 		//Routine for processing
 		srcList = new ArrayList<Object>();
 		this.src = this.bufferedImage2Mat(image);
-		this.srcList.add(src);
+		this.srcList.add(this.src.clone());
 		
 		//Append the PreProcessing chain
 		PreProcessing = new NumberPlateFiltersChain(this.srcList);
@@ -52,15 +53,27 @@ public class NumberPlateProcessing{
 				PreProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[0][i][0]).getConstructor(String.class).newInstance(options[0][i][1])));
 			} catch (Exception e) {} 
 		}
+		
 		PreProcessing.chainProc();
 		resultList = PreProcessing.getResult();
 		
-		//Append the LocateProcessing chain
-		resultList.add(this.src); // Apply the src image
-		LocateProcessing = new NumberPlateFiltersChain(resultList);
+		//Append the MorphProcessing chain
+		resultList.add(this.src.clone()); // Apply the src image
+		MorphProcessing = new NumberPlateFiltersChain(resultList);
 		for (int i = 0; i < options[1].length; i++){
 			try {
-				LocateProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[1][i][0]).getConstructor(String.class).newInstance(options[1][i][1])));
+				MorphProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[1][i][0]).getConstructor(String.class).newInstance(options[1][i][1])));
+			} catch (Exception e) {} 
+		}
+		MorphProcessing.chainProc();
+		resultList = MorphProcessing.getResult();
+		
+		//Append the LocateProcessing chain
+		resultList.set(0, this.src.clone()); // Apply the src image
+		LocateProcessing = new NumberPlateFiltersChain(resultList);
+		for (int i = 0; i < options[2].length; i++){
+			try {
+				LocateProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[2][i][0]).getConstructor(String.class).newInstance(options[2][i][1])));
 			} catch (Exception e) {} 
 		}
 		LocateProcessing.chainProc();
@@ -114,8 +127,12 @@ public class NumberPlateProcessing{
 			jSONObject.put(options[0][i][0], "data:image/jpg;base64," + 
 				mat2Base64String((Mat)PreProcessing.get(i).getResult().get(0)));
 		}
-		for (int i = 0; i < LocateProcessing.size(); i++) {
+		for (int i = 0; i < MorphProcessing.size(); i++) {
 			jSONObject.put(options[1][i][0], "data:image/jpg;base64," + 
+				mat2Base64String((Mat)MorphProcessing.get(i).getResult().get(0)));
+		}
+		for (int i = 0; i < LocateProcessing.size(); i++) {
+			jSONObject.put(options[2][i][0], "data:image/jpg;base64," + 
 				mat2Base64String((Mat)LocateProcessing.get(i).getResult().get(0)));
 		}
 		return jSONObject.toString();
