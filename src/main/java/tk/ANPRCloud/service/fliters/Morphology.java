@@ -27,7 +27,7 @@ public class Morphology implements NumberPlateFilter {
 		result = new Mat();
 		Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(morphSizeWidth, morphSizeHeight) );
 		Imgproc.morphologyEx((Mat)src.get(0), result, Imgproc.MORPH_CLOSE, element);
-	    Highgui.imwrite("/tmp/Morphology.png", result);
+	    //Highgui.imwrite("/tmp/Morphology.png", result);
 	    resultList.add(result);
 		return resultList;
 	}

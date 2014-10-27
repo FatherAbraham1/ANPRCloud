@@ -43,8 +43,8 @@ public class RangeColor implements NumberPlateFilter {
 		Imgproc.cvtColor(result, result, Imgproc.COLOR_GRAY2RGB);
 		
 		// For debug 
-		Highgui.imwrite("/tmp/RangeColorproc.png", (Mat)resultChannels[1]);
-		Highgui.imwrite("/tmp/RangeColor.png", result);
+		//Highgui.imwrite("/tmp/RangeColorproc.png", (Mat)resultChannels[1]);
+		//Highgui.imwrite("/tmp/RangeColor.png", result);
 	    resultList.add(result);
 		return resultList;
 	}

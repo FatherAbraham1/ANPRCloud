@@ -17,13 +17,16 @@ import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
 import tk.ANPRCloud.service.fliters.Binarization;
+import tk.ANPRCloud.service.fliters.CharsIdentify;
 import tk.ANPRCloud.service.fliters.Grayscale;
+import tk.ANPRCloud.service.fliters.Locate;
 import tk.ANPRCloud.service.fliters.Sobel;
 import tk.ANPRCloud.util.Base64;
 import tk.ANPRCloud.service.fliters.Crop;
 
 public class NumberPlateProcessing{
-	private static NumberPlateFiltersChain PreProcessing, MorphProcessing, LocateProcessing;
+	private static NumberPlateFiltersChain 
+		PreProcessing, MorphProcessing, LocateProcessing, IdentifyProcessin;
 	private Mat src;
 	private ArrayList<Object> srcList;
 	private ArrayList<Object> resultList;
@@ -31,12 +34,24 @@ public class NumberPlateProcessing{
 		{
 			{{"RangeColor", "default"}, {"GaussianBlur", "5"}, {"Grayscale", "default"}, {"Sobel", "default"}, {"Binarization", "default"}},
 			{{"MaskColor","default"}, {"Morphology","default"}, {"Contours", "default"}},
-			{{"Locate", "default"}}
+			{{"Locate", "default"}},
+			{{"CharsIdentify", "default"}}
 		};
 	
 	static {
 		//Load the JNI library
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+		
+		// Load the configuration of svm system
+		// Note: When work with Tomcat put the file to here by runing 
+		// System.out.println(System.getProperty("user.dir"));
+		Locate.SVMLoadModel("svm.xml");
+		
+		// Load the configuration of ann system
+		// Note: When work with Tomcat put the file to here by runing 
+		// System.out.println(System.getProperty("user.dir"));
+		CharsIdentify.ANNLoadModel("ann.xml");
+		CharsIdentify.LoadProvince();
 	}
 	
 	// Constructor
@@ -45,12 +60,16 @@ public class NumberPlateProcessing{
 		srcList = new ArrayList<Object>();
 		this.src = this.bufferedImage2Mat(image);
 		this.srcList.add(this.src.clone());
+		int indexOfFiltersChain = -1;
 		
 		//Append the PreProcessing chain
 		PreProcessing = new NumberPlateFiltersChain(this.srcList);
-		for (int i = 0; i < options[0].length; i++){
+		indexOfFiltersChain++;
+		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
 			try {
-				PreProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[0][i][0]).getConstructor(String.class).newInstance(options[0][i][1])));
+				IdentifyProcessin.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
+						options[indexOfFiltersChain][i][0]).getConstructor(String.class).
+						newInstance(options[indexOfFiltersChain][i][1])));
 			} catch (Exception e) {} 
 		}
 		
@@ -60,9 +79,12 @@ public class NumberPlateProcessing{
 		//Append the MorphProcessing chain
 		resultList.add(this.src.clone()); // Apply the src image
 		MorphProcessing = new NumberPlateFiltersChain(resultList);
-		for (int i = 0; i < options[1].length; i++){
+		indexOfFiltersChain++;
+		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
 			try {
-				MorphProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[1][i][0]).getConstructor(String.class).newInstance(options[1][i][1])));
+				IdentifyProcessin.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
+						options[indexOfFiltersChain][i][0]).getConstructor(String.class).
+						newInstance(options[indexOfFiltersChain][i][1])));
 			} catch (Exception e) {} 
 		}
 		MorphProcessing.chainProc();
@@ -71,12 +93,37 @@ public class NumberPlateProcessing{
 		//Append the LocateProcessing chain
 		resultList.set(0, this.src.clone()); // Apply the src image
 		LocateProcessing = new NumberPlateFiltersChain(resultList);
-		for (int i = 0; i < options[2].length; i++){
+		indexOfFiltersChain++;
+		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
 			try {
-				LocateProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." + options[2][i][0]).getConstructor(String.class).newInstance(options[2][i][1])));
+				IdentifyProcessin.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
+						options[indexOfFiltersChain][i][0]).getConstructor(String.class).
+						newInstance(options[indexOfFiltersChain][i][1])));
 			} catch (Exception e) {} 
 		}
 		LocateProcessing.chainProc();
+		
+		//Append the LocateProcessing chain
+		//resultList.set(0, this.src.clone()); // Apply the src image
+		/*
+		 *  Unit test
+		 */
+		resultList = new ArrayList<Object>();
+		for (int i = 0; i < 7; i++){
+			Mat tmp = Highgui.imread("debug_charseg_" + i + ".jpg");
+			Imgproc.cvtColor(tmp, tmp, Imgproc.COLOR_RGB2GRAY); 
+			resultList.add(tmp);
+		}
+		IdentifyProcessin = new NumberPlateFiltersChain(resultList);
+		indexOfFiltersChain++;
+		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
+			try {
+				IdentifyProcessin.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
+						options[indexOfFiltersChain][i][0]).getConstructor(String.class).
+						newInstance(options[indexOfFiltersChain][i][1])));
+			} catch (Exception e) {} 
+		}
+		IdentifyProcessin.chainProc();
 	}
 	
 	public String calculateNumber(){

@@ -3,6 +3,7 @@ package tk.ANPRCloud.service.fliters;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -14,6 +15,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.ml.CvSVM;
 import org.opencv.core.RotatedRect;
 
 import tk.ANPRCloud.service.NumberPlateFilter;
@@ -21,17 +23,32 @@ import tk.ANPRCloud.service.NumberPlateFilter;
 public class Locate implements NumberPlateFilter {
 	private Mat result;
     ArrayList<Object> resultList = new ArrayList<Object>();
-	private float m_error = 0.6f;
-	private float m_aspect = 3.75f;
-	private int m_verifyMin = 3;
-	private int m_verifyMax = 20;
-	private float m_angle = 30f;
-	private int HEIGHT = 36;
-	private int WIDTH = 136;
-	private int TYPE = CvType.CV_8UC3;
+	
+    // Constant values
+    static private float m_error = 0.6f;
+    static private float m_aspect = 3.75f;
+    static private int m_verifyMin = 3;
+    static private int m_verifyMax = 20;
+    static private float m_angle = 30f;
+    static private int HEIGHT = 36;
+    static private int WIDTH = 136;
+    static private int TYPE = CvType.CV_8UC3;
+	
+	// Filter plate by hist and 
+	static private CvSVM svm;
+	
+	// Constructor for Locate class
 	public Locate(String arg){
 	}
 
+	// Routine to load svm configuration
+	public static void SVMLoadModel(String path){
+		System.out.println(System.getProperty("user.dir"));
+		svm = new CvSVM();
+		svm.clear();
+		svm.load(path,"svm");
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public ArrayList<Object> proc(ArrayList<Object> srcList) {
@@ -100,8 +117,10 @@ public class Locate implements NumberPlateFilter {
 
 					Mat resultMat;
 					resultMat = corpResultMat(img_rotated, rect_size, minRect.center);
-					Highgui.imwrite("/tmp/Locate.png", resultMat);
-					resultList.add(resultMat);
+					//Highgui.imwrite("/tmp/Locate.png", resultMat);
+					//if (plateJudge(resultMat)){
+						resultList.add(resultMat);
+					//}
 				}
 			}
 		}
@@ -158,4 +177,37 @@ public class Locate implements NumberPlateFilter {
 		Imgproc.resize(img_crop, resultResized, resultResized.size(), 0, 0, Imgproc.INTER_CUBIC);
 		return resultResized;
 	}
+	
+	//! 使用色彩图进行SVM判断
+	boolean plateJudge(Mat inMat)
+	{
+		//通过色彩直方图进行预测
+		Mat p = histeq(inMat).reshape(1, 1);
+		p.convertTo(p, CvType.CV_32FC1);
+		int response = (int)svm.predict(p);
+		return (response == 1);
+	}
+	
+	//! 直方图均衡
+	Mat histeq(Mat in)
+	{
+		Mat out = new Mat(in.size(), in.type());
+		if(in.channels()==3)
+		{
+			Mat hsv =  new Mat();
+			List<Mat> hsvSplit = new ArrayList<Mat>();
+			Imgproc.cvtColor(in, hsv, Imgproc.COLOR_BGR2HSV);
+			Core.split(hsv, hsvSplit);
+			Imgproc.equalizeHist(hsvSplit.get(2), hsvSplit.get(2));
+			Core.merge(hsvSplit, hsv);
+			Imgproc.cvtColor(hsv, out, Imgproc.COLOR_HSV2BGR);
+		}
+		else if(in.channels()==1)
+		{
+			Imgproc.equalizeHist(in, out);
+		}
+		return out;
+	}
+
+
 }

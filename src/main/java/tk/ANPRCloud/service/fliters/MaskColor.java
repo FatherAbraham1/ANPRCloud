@@ -43,7 +43,7 @@ public class MaskColor implements NumberPlateFilter {
 			Core.bitwise_or(mask, tmp, mask);
 		}
 		Core.bitwise_and((Mat)srcList.get(0), mask, result);
-		Highgui.imwrite("/tmp/MaskColor.png", result);
+		//Highgui.imwrite("/tmp/MaskColor.png", result);
 	    resultList.add(result);
 		return resultList;
 	}

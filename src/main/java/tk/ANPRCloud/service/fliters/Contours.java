@@ -42,7 +42,7 @@ public class Contours implements NumberPlateFilter {
 			new Scalar(0.0,0.0,255.0), // in blue
 			1); // with a thickness of 1
 		
-	    Highgui.imwrite("/tmp/Contours.png", result);
+	    //Highgui.imwrite("/tmp/Contours.png", result);
 	    resultList.add(result); // 0 result Mat
 	    resultList.add(contours); // 1 contours points
 		return resultList;
