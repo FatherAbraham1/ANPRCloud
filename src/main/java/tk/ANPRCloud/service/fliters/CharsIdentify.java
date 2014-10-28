@@ -196,7 +196,7 @@ public class CharsIdentify implements NumberPlateFilter {
 	int classify(Mat f, boolean isChinses){
 		int result = -1;
 		Mat output =  new Mat(1, numAll, CvType.CV_32FC1);
-		ann.predict(f, output);  Highgui.imwrite("classify.png", output);
+		ann.predict(f, output); // Highgui.imwrite("classify.png", output);
 
 		if (!isChinses)
 		{

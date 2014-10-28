@@ -15,7 +15,7 @@ public class TestProcessing {
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("Processing Unit Test");
-		image = ImageIO.read(new File("001.jpg"));
+		image = ImageIO.read(new File("src/test/testNumberPlateProcessing/001.jpg"));
 		numberPlateProcessing =  new NumberPlateProcessing(image);
 		System.out.println("Processing Unit Test Success");
 	}

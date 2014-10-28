@@ -35,7 +35,8 @@ public class NumberPlateProcessing{
 			{{"RangeColor", "default"}, {"GaussianBlur", "5"}, {"Grayscale", "default"}, {"Sobel", "default"}, {"Binarization", "default"}},
 			{{"MaskColor","default"}, {"Morphology","default"}, {"Contours", "default"}},
 			{{"Locate", "default"}},
-			{{"CharsIdentify", "default"}}
+			//{{"CharsIdentify", "default"}}
+			{{"CharsSegment", "default"}}
 		};
 	
 	static {
@@ -67,7 +68,7 @@ public class NumberPlateProcessing{
 		indexOfFiltersChain++;
 		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
 			try {
-				IdentifyProcessin.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
+				PreProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
 						options[indexOfFiltersChain][i][0]).getConstructor(String.class).
 						newInstance(options[indexOfFiltersChain][i][1])));
 			} catch (Exception e) {} 
@@ -82,7 +83,7 @@ public class NumberPlateProcessing{
 		indexOfFiltersChain++;
 		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
 			try {
-				IdentifyProcessin.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
+				MorphProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
 						options[indexOfFiltersChain][i][0]).getConstructor(String.class).
 						newInstance(options[indexOfFiltersChain][i][1])));
 			} catch (Exception e) {} 
@@ -96,7 +97,7 @@ public class NumberPlateProcessing{
 		indexOfFiltersChain++;
 		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
 			try {
-				IdentifyProcessin.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
+				LocateProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
 						options[indexOfFiltersChain][i][0]).getConstructor(String.class).
 						newInstance(options[indexOfFiltersChain][i][1])));
 			} catch (Exception e) {} 
@@ -105,15 +106,20 @@ public class NumberPlateProcessing{
 		
 		//Append the LocateProcessing chain
 		//resultList.set(0, this.src.clone()); // Apply the src image
-		/*
-		 *  Unit test
-		 */
+
 		resultList = new ArrayList<Object>();
-		for (int i = 0; i < 7; i++){
-			Mat tmp = Highgui.imread("debug_charseg_" + i + ".jpg");
-			Imgproc.cvtColor(tmp, tmp, Imgproc.COLOR_RGB2GRAY); 
-			resultList.add(tmp);
-		}
+		
+		// Test CharsIdentify
+//		for (int i = 0; i < 7; i++){
+//			Mat tmp = Highgui.imread("src/test/testCharIdentitfy/debug_charseg_" + i + ".jpg");
+//			Imgproc.cvtColor(tmp, tmp, Imgproc.COLOR_RGB2GRAY); 
+//			resultList.add(tmp);
+//		}
+		
+		// Test CharsSegment
+		Mat tmp = Highgui.imread("src/test/testCharSegment/testCharSegment.jpg");
+		resultList.add(tmp);
+		
 		IdentifyProcessin = new NumberPlateFiltersChain(resultList);
 		indexOfFiltersChain++;
 		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
