@@ -88,7 +88,7 @@ myDropzone.on("success", function(file) {
 
         // Convert details JSON string to object 
         var details = JSON.parse(data.numberPlate["details"]);
-        var order = ["GaussianBlur", "Grayscale", "Sobel", "Binarization", "Locate"];
+        var order = ["GaussianBlur", "Grayscale", "Sobel", "Binarization", "Locate", "CharsSegment"];
         
         // Append the details images to the thumbs
         $(".clearing-thumbs").html("");

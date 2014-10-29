@@ -38,11 +38,11 @@ public class NumberPlateManagerImpl implements NumberPlateManager {
 		numberPlateEntity.setContenType(numberPlateFile.getContentType());
 		numberPlateEntity.setFileName(Base64Encode(numberPlateFile.getFilename()));
 		numberPlateEntity.setOwner(username);
-		numberPlateEntity.setNumber(numberPlateProcessing.calculateNumber());
-		numberPlateEntity.setDetails(numberPlateProcessing.getDetails());
 		List<Object> idAndNumber = new ArrayList<Object>();
-		idAndNumber.add(numberPlateDAO.addNumberPlate(numberPlateEntity));
-		idAndNumber.add(numberPlateEntity.getNumber());
+		idAndNumber.add(numberPlateProcessing.calculateNumber()); // Get number
+		numberPlateEntity.setNumber(Base64Encode((String)idAndNumber.get(0)));
+		numberPlateEntity.setDetails(numberPlateProcessing.getDetails());
+		idAndNumber.add(numberPlateDAO.addNumberPlate(numberPlateEntity)); // Get Id
 		return idAndNumber;
 	}
 	

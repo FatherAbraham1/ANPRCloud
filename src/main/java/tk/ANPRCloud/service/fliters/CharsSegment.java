@@ -8,6 +8,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -35,17 +36,17 @@ public class CharsSegment implements NumberPlateFilter {
 	public ArrayList<Object> proc(ArrayList<Object> srcList) {
 			    
 		// Get input mat from srcList
-		Mat input = (Mat) srcList.get(0);
+		Mat input = ((Mat)srcList.get(0)).clone();
 				
 		// Convert input to gray
 		Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY);
 
 		//Threshold input image
 		Mat img_threshold = new Mat();
-		Imgproc.threshold(input, img_threshold, 10, 255, Imgproc.THRESH_OTSU + Imgproc.THRESH_BINARY); // Highgui.imwrite("img_threshold.png", img_threshold);
+		Imgproc.threshold(input, img_threshold, 10, 255, Imgproc.THRESH_OTSU + Imgproc.THRESH_BINARY);  Highgui.imwrite("img_threshold.png", img_threshold);
 			
 		//去除车牌上方的柳钉以及下方的横线等干扰
-		clearLiuDing(img_threshold);  //Highgui.imwrite("img_threshold.png", img_threshold);
+		clearLiuDing(img_threshold);  Highgui.imwrite("img_threshold.png", img_threshold);
 
 		Mat img_contours = new Mat();
 		img_threshold.copyTo(img_contours);
@@ -67,10 +68,11 @@ public class CharsSegment implements NumberPlateFilter {
 
 		//Remove patch that are no inside limits of aspect ratio and area.  
 		//将不符合特定尺寸的图块排除出去
+		int fuck = 0;
 		while (itc.hasNext()) 
 		{
 			Rect mr = Imgproc.boundingRect((MatOfPoint) itc.next());
-			Mat auxRoi =  new Mat(img_threshold, mr);
+			Mat auxRoi =  new Mat(img_threshold, mr);  Highgui.imwrite("auxRoi" + fuck++ +".png", auxRoi);
 			if (verifySizes(auxRoi))
 			{
 				vecRect.add(mr);
@@ -118,10 +120,23 @@ public class CharsSegment implements NumberPlateFilter {
 			}
 		}
 		
+		// Add preview image
+		Mat preview = new Mat( ((Mat) resultList.get(0)).rows(),
+				((Mat) resultList.get(0)).cols() * 7, CvType.CV_8UC1);
+		for (int i = 0; i < resultList.size() ; i++ ){
+			Mat charMat = (Mat) resultList.get(i);
+			Mat previewRoi = preview.submat( 
+					new Rect( i * charMat.cols(), 0, charMat.cols(),charMat.rows()));
+			charMat.copyTo(previewRoi);
+			Core.line(preview, new Point( i * charMat.cols() - 1, 0), 
+					new Point(i * charMat.cols() - 1, charMat.rows()), new Scalar(125));
+		}
+		resultList.add(0, preview);
+		
 		// Debug 
-//		for (int i = 0; i < resultList.size(); i++){
-//			Highgui.imwrite("chars_out" + i + ".png", (Mat) resultList.get(i));
-//		}
+		for (int i = 0; i < resultList.size(); i++){
+			Highgui.imwrite("chars_out" + i + ".png", (Mat) resultList.get(i));
+		}
 		return resultList;
 	}
 

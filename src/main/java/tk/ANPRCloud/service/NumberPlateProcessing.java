@@ -26,7 +26,7 @@ import tk.ANPRCloud.service.fliters.Crop;
 
 public class NumberPlateProcessing{
 	private static NumberPlateFiltersChain 
-		PreProcessing, MorphProcessing, LocateProcessing, IdentifyProcessin;
+		PreProcessing, MorphProcessing, LocateProcessing, IdentifyProcessing;
 	private Mat src;
 	private ArrayList<Object> srcList;
 	private ArrayList<Object> resultList;
@@ -36,7 +36,7 @@ public class NumberPlateProcessing{
 			{{"MaskColor","default"}, {"Morphology","default"}, {"Contours", "default"}},
 			{{"Locate", "default"}},
 			//{{"CharsIdentify", "default"}}
-			{{"CharsSegment", "default"}}
+			{{"CharsSegment", "default"}, {"CharsIdentify", "default"}}
 		};
 	
 	static {
@@ -57,13 +57,17 @@ public class NumberPlateProcessing{
 	
 	// Constructor
 	public NumberPlateProcessing(BufferedImage image) {	
-		//Routine for processing
+		/*
+		 * Routine for processing
+		 */
 		srcList = new ArrayList<Object>();
 		this.src = this.bufferedImage2Mat(image);
 		this.srcList.add(this.src.clone());
 		int indexOfFiltersChain = -1;
 		
-		//Append the PreProcessing chain
+		/*
+		 * Append the PreProcessing chain
+		 */
 		PreProcessing = new NumberPlateFiltersChain(this.srcList);
 		indexOfFiltersChain++;
 		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
@@ -77,7 +81,9 @@ public class NumberPlateProcessing{
 		PreProcessing.chainProc();
 		resultList = PreProcessing.getResult();
 		
-		//Append the MorphProcessing chain
+		/*
+		 * Append the MorphProcessing chain
+		 */
 		resultList.add(this.src.clone()); // Apply the src image
 		MorphProcessing = new NumberPlateFiltersChain(resultList);
 		indexOfFiltersChain++;
@@ -91,7 +97,9 @@ public class NumberPlateProcessing{
 		MorphProcessing.chainProc();
 		resultList = MorphProcessing.getResult();
 		
-		//Append the LocateProcessing chain
+		/*
+		 * Append the LocateProcessing chain
+		 */
 		resultList.set(0, this.src.clone()); // Apply the src image
 		LocateProcessing = new NumberPlateFiltersChain(resultList);
 		indexOfFiltersChain++;
@@ -103,12 +111,11 @@ public class NumberPlateProcessing{
 			} catch (Exception e) {} 
 		}
 		LocateProcessing.chainProc();
-		
-		//Append the LocateProcessing chain
-		//resultList.set(0, this.src.clone()); // Apply the src image
-
-		resultList = new ArrayList<Object>();
-		
+		resultList = LocateProcessing.getResult();
+		/*
+		 * Append the IdentifyProcessing chain
+		 */
+			
 		// Test CharsIdentify
 //		for (int i = 0; i < 7; i++){
 //			Mat tmp = Highgui.imread("src/test/testCharIdentitfy/debug_charseg_" + i + ".jpg");
@@ -117,24 +124,26 @@ public class NumberPlateProcessing{
 //		}
 		
 		// Test CharsSegment
-		Mat tmp = Highgui.imread("src/test/testCharSegment/testCharSegment.jpg");
-		resultList.add(tmp);
+		//Mat tmp = Highgui.imread("src/test/testCharSegment/testCharSegment.jpg");
+		//resultList.add(tmp);
 		
-		IdentifyProcessin = new NumberPlateFiltersChain(resultList);
+
+		IdentifyProcessing = new NumberPlateFiltersChain(resultList);
 		indexOfFiltersChain++;
 		for (int i = 0; i < options[indexOfFiltersChain].length; i++){
 			try {
-				IdentifyProcessin.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
+				IdentifyProcessing.addFilter((NumberPlateFilter)(Class.forName("tk.ANPRCloud.service.fliters." +
 						options[indexOfFiltersChain][i][0]).getConstructor(String.class).
 						newInstance(options[indexOfFiltersChain][i][1])));
 			} catch (Exception e) {} 
 		}
-		IdentifyProcessin.chainProc();
+		IdentifyProcessing.chainProc();
+		resultList = IdentifyProcessing.getResult();
 	}
 	
 	public String calculateNumber(){
 		//Do the processing
-		return "fuck";
+		return (String)resultList.get(1);
 	}
 	
 	public Mat bufferedImage2Mat(BufferedImage image)
@@ -187,6 +196,10 @@ public class NumberPlateProcessing{
 		for (int i = 0; i < LocateProcessing.size(); i++) {
 			jSONObject.put(options[2][i][0], "data:image/jpg;base64," + 
 				mat2Base64String((Mat)LocateProcessing.get(i).getResult().get(0)));
+		}
+		for (int i = 0; i < IdentifyProcessing.size(); i++) {
+			jSONObject.put(options[3][i][0], "data:image/jpg;base64," + 
+				mat2Base64String((Mat)IdentifyProcessing.get(i).getResult().get(0)));
 		}
 		return jSONObject.toString();
 	}

@@ -85,9 +85,13 @@ public class CharsIdentify implements NumberPlateFilter {
 
 	@Override
 	public ArrayList<Object> proc(ArrayList<Object> srcList) {
+		// Get the preview image and remove it from the srcList
+		resultList.add(srcList.get(0));
+		srcList.remove(0);
+		
 		// Initialize result string
 		result = "";		
-
+		
 		for (int i = 0; i < srcList.size(); i++){
 			// Get src form srcList
 		    Mat src = (Mat) srcList.get(i); 
@@ -111,6 +115,7 @@ public class CharsIdentify implements NumberPlateFilter {
 				result = province + result;
 			}
 		}
+		srcList.add(0, resultList.get(0));
 		resultList.add(result); System.out.println(result);
 		return resultList;
 	}

@@ -75,8 +75,8 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 		logger.info("addNumberPlate method called");
 		if (numberPlateFile.storeImageFile()){
 			List<Object> idAndNumber = numberPlateManager.addNumberPlate(getUsernameFromCurrentSession(), numberPlateFile);
-			Id = (Integer)idAndNumber.get(0);
-			result.add((String)idAndNumber.get(1));
+			result.add((String)idAndNumber.get(0)); // Set number
+			Id = (Integer)idAndNumber.get(1); // Set id
 		} else {
 			result.add(ERROR);
 		}
@@ -188,6 +188,7 @@ public class EditNumberPlateAction extends ActionSupport implements SessionAware
 	private NumberPlateEntity Base64Decode(NumberPlateEntity entity){
 		try{
 			entity.setFileName(Base64Decode(entity.getFileName()));
+			entity.setNumber(Base64Decode(entity.getNumber()));
 			return entity;
 		} catch (Exception e){
 			return null;
