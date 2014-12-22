@@ -1,8 +1,11 @@
 package tk.ANPRCloud.service.fliters;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.opencv.core.Core;
 import org.opencv.core.Core.MinMaxLocResult;
@@ -41,10 +44,12 @@ public class CharsIdentify implements NumberPlateFilter {
 		"zh_jl" /* 吉 */, "zh_jin" /* 津 */, "zh_jing" /* 京 */, "zh_shan" /* 陕 */, 
 		"zh_liao" /* 辽 */, "zh_lu" /* 鲁 */, "zh_min" /* 闽 */, "zh_ning" /* 宁 */, 
 		"zh_su" /* 苏 */,  "zh_sx" /* 晋 */, "zh_wan" /* 皖 */,
-		 "zh_yu" /* 豫 */, "zh_yue" /* 粤 */, "zh_zhe" /* 浙 */};
+		 "zh_yu" /* 豫 */, "zh_yue" /* 粤 */, "zh_zhe" /* 浙 */,
+		"zh_gui" /* 桂 */, "zh_qiong" /* 琼 */
+	};
 
-	static private int numChinese = 20;
-	static private int numAll = 54; /* 34+20=54 */
+	static private int numChinese = 22;
+	static private int numAll = 56; /* 34+22=56 */
 	
 	static private Map<String, String> m_map = new HashMap<String, String>();
 		
@@ -77,6 +82,8 @@ public class CharsIdentify implements NumberPlateFilter {
 			m_map.put("zh_yu","豫");
 			m_map.put("zh_yue","粤");
 			m_map.put("zh_zhe","浙");
+			m_map.put("zh_qiong","琼");
+			m_map.put("zh_gui","桂");
 		}
 	}
 	
@@ -94,8 +101,8 @@ public class CharsIdentify implements NumberPlateFilter {
 		
 		for (int i = 0; i < srcList.size(); i++){
 			// Get src form srcList
-		    Mat src = (Mat) srcList.get(i); 
-			
+		    Mat src = (Mat) srcList.get(i); //  SecureRandom random = new SecureRandom(); Highgui.imwrite("classify" + new BigInteger(130, random).toString(32) + ".png", src);
+		    
 			// Set isChinese flag
 			boolean isChinese = ( i == 0 );
 		    
@@ -107,6 +114,7 @@ public class CharsIdentify implements NumberPlateFilter {
 			if (!isChinese)
 			{
 				result = result + strCharacters[index];
+				if (result.length()==2) {result = result + "·";};
 			}
 			else
 			{
