@@ -43,10 +43,10 @@ public class CharsSegment implements NumberPlateFilter {
 
 		//Threshold input image
 		Mat img_threshold = new Mat();
-		Imgproc.threshold(input, img_threshold, 10, 255, Imgproc.THRESH_OTSU + Imgproc.THRESH_BINARY);  Highgui.imwrite("img_threshold.png", img_threshold);
+		Imgproc.threshold(input, img_threshold, 10, 255, Imgproc.THRESH_OTSU + Imgproc.THRESH_BINARY); // Highgui.imwrite("img_threshold.png", img_threshold);
 			
 		//去除车牌上方的柳钉以及下方的横线等干扰
-		clearLiuDing(img_threshold);  Highgui.imwrite("img_threshold.png", img_threshold);
+		clearLiuDing(img_threshold); // Highgui.imwrite("img_threshold.png", img_threshold);
 
 		Mat img_contours = new Mat();
 		img_threshold.copyTo(img_contours);
@@ -72,7 +72,7 @@ public class CharsSegment implements NumberPlateFilter {
 		while (itc.hasNext()) 
 		{
 			Rect mr = Imgproc.boundingRect((MatOfPoint) itc.next());
-			Mat auxRoi =  new Mat(img_threshold, mr);  Highgui.imwrite("auxRoi" + fuck++ +".png", auxRoi);
+			Mat auxRoi =  new Mat(img_threshold, mr); // Highgui.imwrite("auxRoi" + fuck++ +".png", auxRoi);
 			if (verifySizes(auxRoi))
 			{
 				vecRect.add(mr);
@@ -135,7 +135,7 @@ public class CharsSegment implements NumberPlateFilter {
 		
 		// Debug 
 		for (int i = 0; i < resultList.size(); i++){
-			Highgui.imwrite("chars_out" + i + ".png", (Mat) resultList.get(i));
+			//Highgui.imwrite("chars_out" + i + ".png", (Mat) resultList.get(i));
 		}
 		return resultList;
 	}
